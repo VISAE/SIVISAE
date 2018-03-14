@@ -1,0 +1,104 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 9/02/2017, 11:51:45 AM
+    Author     : andres.mendez
+*/
+
+.div_text_count_one 
+{
+    color: rgb(255, 255, 255);
+    font-size: 37px;
+    background-color: #004669;
+
+}
+
+.div_subtext_count_one 
+{
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    background-color: #004669;
+}
+
+.div_text_count_two
+{
+    color: rgb(255, 255, 255);
+    font-size: 37px;
+    background-color: #c66626;
+
+}
+
+.div_subtext_count_two
+{
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    background-color: #c66626;
+}
+
+.div_text_count_three
+{
+    color: rgb(255, 255, 255);
+    font-size: 37px;
+    background-color: #d29501;
+
+}
+
+.div_subtext_count_three
+{
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    background-color: #d29501;
+}
+
+.div_text_count_four
+{
+    color: rgb(255, 255, 255);
+    font-size: 37px;
+    background-color: #4a8522;
+
+}
+
+.div_subtext_count_four
+{
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    background-color: #4a8522;
+}
+
+
+.div_text_count_five
+{
+    color: rgb(255, 255, 255);
+    font-size: 37px;
+    background-color: #f36360;
+
+}
+
+.div_subtext_count_five
+{
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    background-color: #f36360;
+}
+
+.div_text_data_head
+{
+    color: #000;
+    font-size: 15px;
+    background-color: #D2D1D1;
+    font-weight: bold;
+}
+
+.div_text_data_body
+{
+    color: #000;
+    font-size: 15px;
+    background-color: #FBFBFB;
+    font-weight: bold;
+}
+
+
+

@@ -1,0 +1,359 @@
+/* 
+    Document   : estilo_popup
+    Created on : 30/04/2015, 09:03:09 AM
+    Author     : andres.mendez
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.b-close{
+    cursor:pointer;
+    position:absolute;
+    right:10px;
+    top:5px;
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/cerrar.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+}
+
+
+/*Popup Crear*/
+
+#popup_crear { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+/*Popup Editar*/
+
+#popup_editar { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+/*Popup Eliminar*/
+
+#popup_eliminar { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+/*Popup Directorio*/
+
+#popup_directorio { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+#popup_notif { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 250px;
+}
+
+#popup_calendario { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 250px;
+}
+
+
+/*boton crear*/
+
+.boton_c{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/crear.png) no-repeat;
+    background-size: 30px 30px;
+    width: 35px;  
+    height: 35px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_c.small{
+    float:right;
+}
+
+.boton_c:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+/*Bloqueado*/
+.boton_c_bloq{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/crear_bloq.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_c_bloq.small{
+    float:right;
+}
+
+.boton_c_bloq:hover{
+    background-color: #CCCCCC;
+    color:#000000;
+}
+
+/*boton crear*/
+
+/*boton editar*/
+
+.boton_e{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/editar.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_e.small{
+    float:right;
+}
+
+.boton_e:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+
+/*Bloqueado*/
+.boton_e_bloq{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/editar_bloq.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_e_bloq.small{
+    float:right;
+}
+
+.boton_e_bloq:hover{
+    background-color: #CCCCCC;
+    color:#000000;
+}
+
+/*boton editar*/
+
+
+/*boton eliminar*/
+
+.boton_el{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/eliminar.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_el.small{
+    float:right;
+}
+
+.boton_el:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+
+/*Bloqueado*/
+.boton_el_bloq{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/eliminar_bloq.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_el_bloq.small{
+    float:right;
+}
+
+.boton_el_bloq:hover{
+    background-color: #CCCCCC;
+    color:#000000;
+}
+
+/*boton eliminar*/
+
+/*Popup Asignar*/
+
+#popup_asignar { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+/*boton Asignar*/
+
+.boton_a{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/estudiantes.png) no-repeat;
+    background-size: 35px 35px;
+    width: 40px;  
+    height: 40px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_a.small{
+    float:right;
+}
+
+.boton_a:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+
+/*boton Asignar*/
+
+/*Popup cargar excel*/
+
+#popup_cargar { 
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none; 
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+}
+
+/*boton Cargar*/
+
+.boton_ex{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/Excel.png) no-repeat;
+    background-size: 35px 35px;
+    width: 40px;  
+    height: 40px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_a.small{
+    float:right;
+}
+
+.boton_a:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+
+/*boton Cargar Ecxel*/
+
+
+/*boton directorio*/
+
+.boton_d{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/directorio.png) no-repeat;
+    background-size: 30px 30px;
+    width: 35px;  
+    height: 35px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_d.small{
+    float:right;
+}
+
+.boton_d:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+/*Bloqueado*/
+.boton_d_bloq{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/directorio_bloq.png) no-repeat;
+    background-size: 20px 20px;
+    width: 25px;  
+    height: 25px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_d_bloq.small{
+    float:right;
+}
+
+.boton_d_bloq:hover{
+    background-color: #CCCCCC;
+    color:#000000;
+}
+
+/*boton directorio*/
+
+
+/*boton ver encuesta*/
+.boton_ver_encuesta{
+    background-color:#FFFFFF;
+    background: url(../imagenes/opciones/encuesta.png) no-repeat;
+    background-size: 30px 30px;
+    width: 35px;  
+    height: 35px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.boton_ver_encuesta.small{
+    float:right;
+}
+
+.boton_ver_encuesta:hover{
+    background-color: #E7B200;
+    color:#000000;
+}
+/*boton ver encuesta*/
+
+.tb_peq  {border-collapse:collapse;border-spacing:0;}
+.tb_peq td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tb_peq th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tb_peq .tg-r31a{font-weight:bold;font-size:12px;font-family:Tahoma, Geneva, sans-serif !important;;text-align:center}
+.tb_peq .tg-7ser{font-size:10px; min-width: 100px; font-family:Tahoma, Geneva, sans-serif !important;}

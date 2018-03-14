@@ -1,0 +1,723 @@
+@-webkit-keyframes menuMobileShow {
+    from {
+    	left: -300px;
+	}
+    to {
+    	left: 0;
+}
+}
+/* Standard syntax */
+@keyframes menuMobileShow {
+    ffrom {
+    	left: -300px;
+	}
+    to {
+    	left: 0;
+}
+}
+@-webkit-keyframes menuMobileHide {
+    from {
+    	left: 0;
+	}
+    to {
+    	left: -300px;
+}
+}
+/* Standard syntax */
+@keyframes menuMobileHide{
+    from {
+    	left: 0;
+	}
+    to {
+    	left: -300px;
+}
+}
+@-webkit-keyframes menuMobileGhostShow {
+    from {
+    	filter: alpha(opacity=0); /* For IE8 and earlier */
+    	opacity: 0;
+    	right: -100%;
+	}
+    to {
+    	filter: alpha(opacity=70); /* For IE8 and earlier */
+    	opacity: 0.7;
+    	right: 0;
+}
+}	
+/* Standard syntax */
+@keyframes menuMobileGhostShow {
+    from {
+    	filter: alpha(opacity=0); /* For IE8 and earlier */
+    	opacity: 0;
+    	right: -100%;
+	}
+    to {
+    	filter: alpha(opacity=70); /* For IE8 and earlier */
+    	opacity: 0.7;
+    	right: 0;
+}
+}
+@-webkit-keyframes menuMobileGhostHide {
+    from {
+    	filter: alpha(opacity=70); /* For IE8 and earlier */
+    	opacity: 0.7;
+    	right: 0;
+	}
+    to {
+    	filter: alpha(opacity=0); /* For IE8 and earlier */
+    	opacity: 0;
+    	right: -100%;
+}
+}
+/* Standard syntax */
+@keyframes menuMobileGhostHide{
+    from {
+    	opacity: 0.7;
+    	filter: alpha(opacity=70); /* For IE8 and earlier */
+    	right: 0;
+	}
+    to {
+    	opacity: 0;
+    	filter: alpha(opacity=0); /* For IE8 and earlier */
+    	right: -100%;
+}
+}
+@font-face {
+	font-family: 'FRABKUNAD';
+	src:url('../fuentes/FRABK.eot'); /* http://www.fontsquirrel.com/ Internet explorer 7-8 (eot), Internet explorer 6 (embeded-opentype) , Firefox Chrome Safari Moderno (woff) , Safari Viejito (ttf) , Iphone Ipad(SVG) */ 
+	src:url('../fuentes/FRABK.eot?#iefix') format('embedded-opentype'), 
+		url('../fuentes/FRABK.woff') format('woff'),
+		url('../fuentes/FRABK.ttf') format('truetype'),
+		url('../fuentes/FRABK.svg#FRABK') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+a.necesitaAyuda{
+	background: #e7b200; /*e7b200   e26c0e*/
+	color: #FFF;
+	display: block;
+	padding: 10px;
+	position: fixed;
+	right: -210px;
+	text-decoration: none;
+	transition:.3s;
+	top: 5%;
+	width: 260px;
+	z-index: 998;
+}
+a.necesitaAyuda:hover{
+	right: 0;
+}
+a.necesitaAyuda img{
+	width: 50px;
+}
+a.necesitaAyuda span{
+	display: inline-block;
+	font-size: 1em;
+	font-weight: bold;
+	padding-top: 8px;
+	padding-left: 10px;
+	position: absolute;
+}
+body{
+	font-family: "FRABKUNAD",Arial;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+}
+div.headerMobile{
+	background: #004669;
+	display: none;
+	height: 55px;
+	text-align: center;
+	width: 100%;
+}
+div.headerMobile figure{
+	padding: 5px;
+	margin: 0;
+}
+div.headerMobile figure img{
+	width: 207px;
+}
+div.menuMobile{
+	cursor: pointer;
+	color: #FFF;
+	float: left;
+	padding: 1em;
+}
+figure{
+	display: block;
+}
+header{
+	display: block;
+	margin: 0 auto;
+	overflow: hidden;
+	padding: 0;
+	width: 1030px;
+}
+header figure{
+	background: #FFF;
+	float: left;
+	height: 100px;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	text-align: center;
+	width: 350px;
+}
+header figure img{
+	margin-top: 15px;
+	width: 315px;
+}
+header div.moduleTop{
+	float: right;
+	height: 100px;
+	text-align: right;
+	width: 706px;
+}
+header div.moduleTop p{
+	padding:0px;
+	margin:0px;
+}
+img{
+	border: 0;
+}
+main{
+	margin: 0 auto;
+	padding: 0px 14px;
+	padding-bottom: 17px;
+	width: 1030px;
+}
+main h1{
+	display: none;
+}
+nav{
+	background: #004669;
+	display: block;
+	text-align: center;
+	width: 100%;
+}
+nav a{
+	color: #FFF;
+	text-decoration: none;
+}
+nav a span{
+	display: none;
+}
+nav.mostrarMobile{
+	-webkit-animation-name: menuMobileShow; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: .3s; /* Chrome, Safari, Opera */
+    animation-name: menuMobileShow;
+    animation-duration: .3s;
+	left: 0;
+}
+nav ul{
+	margin: 0;
+	padding: 0;
+}
+nav ul li{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+nav ul li.general a.menu{
+	display: none;
+}
+nav ul li.general ul{
+	background: #004669;
+	color:#CCC;
+	display: block;
+	margin: 0;
+	padding: .3em 0;
+	width:100%;
+}
+nav ul li.general ul li{
+	border-right: #FFF solid 1px;
+	display: inline;
+	padding: 0;
+}
+nav ul li.general ul li:last-child{
+	border-right: #FFF solid 0px;
+}
+nav ul li.general ul li a{
+	color: #FFF;
+	font-size: .9em;
+	font-weight: bold;
+	text-decoration: none;
+	padding: .1em .7em;
+	transition:.3s;
+}
+nav ul li.general ul li a:hover{
+	background: #e7b200;
+	color:#000;
+}/* ------------ Principal -------------- */
+nav ul li.principal{
+	height: 0;
+}
+nav ul li.principal a.menu{
+	display: none;
+}
+nav ul li.principal ul{
+	background: #e8e8e8;
+	color:#6e6e6e;
+	display: block;
+	margin-top: 100px;
+	padding: .5em 0;
+	position: absolute;
+	width:100%;
+}
+nav ul li.principal ul li{
+	border-right: #FFF solid 1px;
+	display: inline;
+	padding: .2em 0em;
+}
+nav ul li.principal ul li:last-child{
+	border-right: #FFF solid 0px;
+}
+nav ul li.principal ul li a{
+	color:#6e6e6e;
+	font-weight: bold;
+	text-decoration: none;
+	padding: .2em 3em;
+	transition:.3s;
+}
+nav ul li.principal ul li a:hover{
+	background: #e7b200;
+	color:#000;
+}
+#footerUNADFull{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	background:#000000;
+        float: left;
+}
+.footerUNAD{
+	margin-left:auto;
+	margin-right:auto;
+	max-width:1024px;
+	background:#000000;
+	padding-bottom: 15px;
+}
+.footerUNADList1,.footerUNADList2,.footerUNADList3,.footerUNADIMG{
+	float:left;
+	margin-top: 15px;
+	/*border-right: 1px solid #FFF;*/
+	height: 170px;
+}
+.footerUNADList1 h3,.footerUNADList2 h3,.footerUNADList3 h3,.footerUNADIMG h3{
+	color: #FFF;
+	padding-top: 0px;
+	margin-top: 0px;
+}
+.footerUNADList1{
+	width:23.30%;
+	padding-left: 1.45%;
+}
+.footerUNADList2{
+	width:20.4%;
+	padding-left: 4.85%;
+}
+.footerUNADList3{
+	width:18.15%;
+	padding-left: 4.85%;
+}
+.footerUNADListUL a{
+	color:#FFF;
+	text-decoration:none;
+}
+.footerUNADListUL a:hover{
+	text-decoration:underline;
+}
+.footerUNADListUL{
+	padding: 0px;
+	margin: 0px;
+}
+.footerUNADListUL li{
+	list-style:none;
+}
+.footerUNADIMG{
+	list-style:none;
+	width: 15%;
+	padding-left: 4%;
+	border-right: 1px solid #000000;
+}
+.footerUNADRedes{
+	width:30px;
+	height:30px;
+	margin-right:10px;
+	margin-top: 10px;
+}
+.footContactFull{
+	width: 100%;
+	background: #000;
+}
+.footContact{
+	margin-left:auto;
+	margin-right:auto;
+	width:1024px;
+	padding-top:20px;
+	padding-bottom:20px;
+	color:#FFF;
+	text-align:center;
+}
+.footContactLogoUNAD{
+	width:24.55%;
+	padding-left: 1.45%;
+	float:left;
+	text-align: left;
+}
+.footContactTextES,.footContactTextEN{
+	width:28%;
+	float:left;
+	font-size:11px;
+	text-align:left;
+	line-height:14px;
+}
+.footContactTextEN{
+	width:25%;
+	padding-left:2%;
+}
+.footContactLogoCalidad{
+	width:18%;
+	float:left;
+	text-align:left;
+}
+#copyrightUNAD{
+	padding-top:10px;
+	padding-bottom:10px;
+	font-size:11px;
+	margin-left:auto;
+	margin-right:auto;
+	width:1024px;
+	color:#FFF;
+	text-align:center;
+}
+#copyrightUNAD a{
+	color:#FFF;
+}
+.footContactElemento{
+	float:left;
+	font-size:12px;
+	text-align:left;
+}
+.footContactElementoIMG{
+	text-align:center;
+	width:25%;
+	margin-right:0%;
+	padding-top:15px;
+}
+.footContactElementoTEXT{
+	padding-right:1%;
+	width:24%;
+}
+.logosInferior{
+	text-align:center;	
+}
+.cleanUnad{
+	clear: both;
+}
+/* Responsive */
+@media screen and (max-width:1220px){
+a.necesitaAyuda{
+	padding: 4px;
+	position: absolute;
+	right: -140px;
+	top: 129px;
+	width: 170px;
+}
+a.necesitaAyuda:hover{
+	right: 0;
+}
+a.necesitaAyuda img{
+	width: 26px;
+}
+a.necesitaAyuda span{
+	font-size: 1em;
+	padding-top: 3px;
+}
+}
+@media screen and (max-width:1060px){
+header{
+	width: 100%;
+}
+}
+@media screen and (max-width:1050px){
+main{
+	border: 0;
+	padding: 3em 0;
+	padding-bottom: 17px;
+	width: 100%;
+}
+}
+@media screen and (max-width:1030px){
+nav ul li.principal ul li a{
+	padding: .2em 2em;
+}
+}
+@media screen and (max-width:1024px){
+.footerUNAD{
+	width:100%;
+}
+.footContact{
+	width:100%;
+}
+#copyrightUNAD{
+	width:100%;	
+}
+}
+@media screen and (max-width:950px){
+nav ul li.general ul li a{
+	padding: 0 .3em;
+}
+}
+@media screen and (max-width:930px){
+.footContactLogoUNAD{
+	width:50%;
+	padding-left: 0%;
+	float:left;
+	text-align: center;
+} 
+.footContactTextES,.footContactTextEN{
+	width:50%;
+	float:left;
+	font-size:11px;
+	text-align:left;
+	line-height:14px;
+	text-align: center;
+}
+.footContactTextEN{
+	padding-left:0%;
+	padding-top: 15px;
+}
+.footContactLogoCalidad{
+	width:50%;
+	float:left;
+	text-align:center;
+	padding-top: 15px;
+}
+}
+@media screen and (max-width:900px){
+nav ul li.principal ul li a{
+	padding: .2em 1.6em;
+}
+}
+@media screen and (max-width:850px){
+a.necesitaAyuda{
+	background: transparent;
+	padding: 5px;
+	right: -120px;
+	top: 0;
+	width: 170px;
+}
+a.necesitaAyuda:hover{
+	right: -120px;
+}
+a.necesitaAyuda img{
+	width: 50px;
+}
+a.necesitaAyuda span{
+	display: none;
+}
+header div.moduleTop{
+	float: none;
+	height: auto;
+	text-align: center;
+	width: 100%;
+}
+header figure{
+	display: none;
+}
+div.menuMobileGhost{
+	-webkit-animation-name: menuMobileGhostHide; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: .4s; /* Chrome, Safari, Opera */
+    animation-name: menuMobileGhostHide;
+    animation-duration: .4s;
+	background: #000;
+	color: #FFF;
+	height: 100%;
+	position: fixed;
+	filter: alpha(opacity=0); /* For IE8 and earlier */
+	opacity: 0;
+	right: -100%;
+	top: 0;
+    width: 100%;
+    z-index: 999;
+}
+div.menuMobileGhostMostrar{
+	-webkit-animation-name: menuMobileGhostShow; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: .4s; /* Chrome, Safari, Opera */
+    animation-name: menuMobileGhostShow;
+    animation-duration: .4s;
+    opacity: 0.7;
+    filter: alpha(opacity=70); /* For IE8 and earlier */
+	right: 0;
+}
+div.headerMobile{
+	display: block;
+}
+main{
+	padding: .6em 0;
+}
+nav{
+	-webkit-animation-name: menuMobileHide; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: .4s; /* Chrome, Safari, Opera */
+    animation-name: menuMobileHide;
+    animation-duration: .4s;
+	color:#CCC;
+	left: -300px;
+	position: absolute;
+	text-align: center;
+	top: 0;
+	width: 300px;
+	z-index: 1000;
+}
+nav a span{
+	display: block;
+}
+nav a img{
+	display: none;
+}
+nav.generalMostar {
+	transition:.3s;
+	display: block;
+}
+nav ul li.principal ul {
+	margin-top:0;
+	position: static;
+}
+nav ul li.principal ul li{
+	border-right: #FFF solid 0px;
+	border-bottom: #FFF solid 1px;
+	display: block;
+}
+nav ul li.principal ul li a{
+	display: block;	
+}
+nav ul li.general ul {
+	/*z-index: 1;
+	width: 300px;
+	display: none;*/ 
+}
+nav ul li.general ul li{
+	border-right: #FFF solid 0px;
+	border-bottom: #FFF solid 1px;
+	display: block;
+}
+nav ul li.general ul li:last-child{
+	border-right: #FFF solid 0px;
+}
+nav ul li.general ul li a{
+	display: block;
+	font-size: 1em;
+	padding: .2em 3em;
+}
+}
+@media screen and (max-width:650px){
+.footerUNADList1,.footerUNADList2,.footerUNADList3,.footerUNADIMG{
+	width:49%;
+	padding-left: 1%;
+	height: 180px;
+	border-right:1px;
+}
+}
+@media screen and (max-width:500px){
+.footContactLogoUNAD,.footContactTextES,.footContactTextEN,.footContactLogoCalidad{
+	width:100%;
+	padding-left: 0%;
+	float:none;
+	text-align: center;
+	padding-top: 15px;
+}
+.footContactTextEN{
+	border-top: 1px solid #FFF;
+	margin-top: 15px;
+}
+div.headerMobile figure{
+	left: 50px;
+	position: absolute;
+	padding: 5px;
+	margin: 0;
+}
+}
+@media screen and (max-width:450px){
+.footerUNADList1,.footerUNADList2,.footerUNADList3,.footerUNADIMG{
+	width:100%;
+	padding-left: 0%;
+	height: auto;
+	float: none;
+	padding-top: 10px;
+	text-align: center;
+}
+}
+@media screen and (max-width:350px){
+nav{
+	width: 240px;
+}
+}
+
+a.notificaciones{
+	background: #004669; /*e7b200   e26c0e*/
+	color: #FFF;
+	display: block;
+	padding: 10px;
+	position: fixed;
+	right: -210px;
+	text-decoration: none;
+	transition:.3s;
+	top: 11.5%;
+	width: 260px;
+	z-index: 998;
+}
+a.notificaciones:hover{
+	right: 0;
+}
+a.notificaciones img{
+	width: 50px;
+}
+a.notificaciones span{
+	display: inline-block;
+	font-size: 1.5em;
+	font-weight: bold;
+	padding-top: 8px;
+	padding-left: 10px;
+	position: absolute;
+}
+
+
+a.calendario{
+	background: #E26C0E; /*e7b200   e26c0e*/
+	color: #FFF;
+	display: block;
+	padding: 10px;
+	position: fixed;
+	right: -315px;
+	text-decoration: none;
+	transition:.3s;
+	top: 18.5%;
+	width: 365px;
+	z-index: 998;
+        height: 48px;
+}
+a.calendario:hover{
+	right: 0;
+}
+a.calendario img{
+	width: 50px;
+}
+a.calendario span{
+	display: inline-block;
+	font-size: 1.5em;
+	font-weight: bold;
+	padding-top: 8px;
+	padding-left: 10px;
+	position: absolute;
+}
+
+.last_not { 
+   
+   color: #fff;
+/* webkit-border y moz-border son estilo adicionales para hacerlo compatible con la mayoria de los nevegadores */
+   background:#e7b200; 
+   
+}
