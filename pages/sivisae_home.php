@@ -219,7 +219,7 @@ $resNoticia = $consulta->consultarNoticias($pf);
                                                 $cont = 0;
                                                 $ban_color = 1;
                                                 $color = '#F9F9F9 ';
-                                                while ($fila = mysql_fetch_array($resNoticia)) {
+                                                while ($fila = mysqli_fetch_array($resNoticia)) {
                                                     $cont++;
                                                     ?>
                                                     <div style="background: <?php echo $color; ?>">

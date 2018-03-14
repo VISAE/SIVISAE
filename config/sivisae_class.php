@@ -4,9 +4,9 @@
 //Fecha: 25/03/2015
 
 
-define('RUTA_PPAL', 'https://sivisae.unad.edu.co/sivisae/');
+//define('RUTA_PPAL', 'https://sivisae.unad.edu.co/sivisae/');
 //define('RUTA_PPAL', 'http://192.168.4.25/sivisae/');
-//define('RUTA_PPAL', 'http://localhost/sivisae/');
+define('RUTA_PPAL', 'http://localhost/sivisae/');
 define('URL_PAGES', RUTA_PPAL.'pages/');
 define('SEPARADOR', '|');
 define('FECHA_SEG_ITERACIONES', '2015-10-24');

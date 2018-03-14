@@ -43,9 +43,9 @@ class sivisae_consultas extends Bd {
         } else {
             $sqlC = "select now()";
         }
-        $resultado = mysql_query($sqlC);
+        $resultado = mysqli_query($this->getConexion(), $sqlC);
         // Se obtiene el conteo 
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $fecha_serv = $row[0];
         }
         return $fecha_serv;
@@ -57,7 +57,7 @@ class sivisae_consultas extends Bd {
 
     function prueba() {
         $sql = "select cedula from usuario limit 1";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -68,9 +68,9 @@ class sivisae_consultas extends Bd {
     function darSubCategoriasReportes($idCategoria) {
         $sql = "select id_reporte_subcategoria as id, descripcion_subcategoria as descripcion, nombre_bd_subcategoria, tabla
 			from visae_reporte_subcategoria where estado=1 and fk_reporte_categoria=$idCategoria";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $cadena = '<resultado>';
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $id = $row[0];
             $descripcion = $row[1];
             $nombre_bd_subcategoria = $row[2];
@@ -98,7 +98,7 @@ class sivisae_consultas extends Bd {
     function inicioSesion($usuario, $contrasena) {
         $sql = "CALL SIVISAE.iniciar_sesion('$usuario', '$contrasena');";
         //"select vsu.id_usuario as iduser, vsu.usuario, vsu.perfil, vsu.correo, vsu.nombre, vsu.centro, vsz.codigo_zona, vsper.descripcion as nombre_perfil from visae_siie_usuario vsu, visae_siie_cead vsc, visae_siie_zona vsz, visae_siie_perfil vsper where vsu.centro=vsc.codigocead and vsc.zona=vsz.codigo_zona and usuario=upper('$usuario') and contrasena=md5(upper('$contrasena')) and vsu.estado=1 and vsper.id_perfil=vsu.perfil";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -106,7 +106,7 @@ class sivisae_consultas extends Bd {
     function cambioPass($usuario, $contrasena_nva, $contrasena_ant) {
         $sql = "CALL SIVISAE.cambio_pass('$usuario', '$contrasena_ant', '$contrasena_nva');";
         //"update visae_siie_usuario set contrasena=md5(upper('$contrasena_nva')) where usuario=upper('$usuario') and contrasena=md5(upper('$contrasena_ant'))  ";
-        $resultado = mysql_query($sql) or die(mysql_error() . " " . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . " " . $sql);
         return $resultado;
     }
 
@@ -115,8 +115,8 @@ class sivisae_consultas extends Bd {
         $caracteres = array('!', '#', '$', '%', '&', '/', '(', ')', '=', '?', '¡', '+', '*', '-', '_', '.', '<', '>', '¿');
         $rand_pass = chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(65, 90)) . chr(rand(48, 57)) . chr(rand(48, 57)) . $caracteres[rand(0, 18)] . $caracteres[rand(0, 18)];
         $sql = "CALL SIVISAE.generar_pass('$usuario', '$rand_pass');";
-        $resultado = mysql_query($sql);
-        while ($fila = mysql_fetch_array($resultado)) {
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        while ($fila = mysqli_fetch_array($resultado)) {
             $codigo = $fila[0];
             if ($codigo === '1') {
                 return $rand_pass;
@@ -129,7 +129,7 @@ class sivisae_consultas extends Bd {
     //Metodo que guarda las noticias del portal
     function guardarNoticia($titulo, $descripcion, $fecha, $link, $perfil) {
         $sql = "INSERT INTO SIVISAE.`noticias` (`titulo_noticia`,`fecha_noticia`,`descripcion_noticia`,`link`,`imagen`,`perfil`,`estado`) VALUES ('$titulo','$fecha','$descripcion','$link','',$perfil, 1)";
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
         //Se retorna el identity
         $noticiaid = mysql_insert_id();
         return $noticiaid;
@@ -138,35 +138,35 @@ class sivisae_consultas extends Bd {
     //Metodo que guarda la ruta de la imgen de la noticia
     function guardarImagenNoticia($id, $nombre) {
         $sql = "update SIVISAE.noticias set imagen='noticias_imagenes/$nombre' where id_noticia=$id";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     //Metodo que actualiza los cortes de seguimiento del portal
     function actualizaCorteSeguimiento($periodo, $semanas, $fecha_inicio, $fecha_fin, $seguimientos, $id_upd) {
         $sql = "update SIVISAE.corte_seguimiento set periodo_academico_id=$periodo,no_semanas=$semanas,fecha_inicio='$fecha_inicio',fecha_fin='$fecha_fin',iteraciones=$seguimientos where corte_id=$id_upd";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que actualiza las noticias del portal
     function actualizarNoticia($titulo, $descripcion, $fecha_noticia, $link, $id_upd) {
         $sql = "update SIVISAE.noticias set titulo_noticia='$titulo', fecha_noticia='$fecha_noticia', descripcion_noticia='$descripcion',link='$link' where id_noticia=$id_upd";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que guarda los eventos del portal
     function guardarEvento($titulo, $descripcion, $fecha) {
         $sql = "insert into SIVISAE.eventos (titulo_evento,descripcion_evento,fecha_evento,estado) values ('$titulo','$descripcion','$fecha',1)";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que guarda los cortes de seguimiento del portal
     function guardarCorteSeguimiento($periodo, $semanas, $fecha_inicio, $fecha_fin, $seguimientos) {
         $sql = "insert into SIVISAE.corte_seguimiento (periodo_academico_id,no_semanas,fecha_inicio,fecha_fin,iteraciones) values ($periodo, $semanas, '$fecha_inicio', '$fecha_fin', $seguimientos )";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -174,9 +174,9 @@ class sivisae_consultas extends Bd {
     function validarLoginUsuario($login) {
         //Se valida si el usuario existe
         $sqlC = "select count(*) from SIVISAE.usuario where login like '%$login%'";
-        $resultado = mysql_query($sqlC);
+        $resultado = mysqli_query($sqlC);
         // Se obtiene el conteo 
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $contador = $row[0];
         }
         return $contador;
@@ -187,7 +187,7 @@ class sivisae_consultas extends Bd {
         //Se inserta el usuario
         $sql = "INSERT INTO SIVISAE.usuario (cedula, nombre, login, correo, celular, telefono, skype, estado_estado_id, fecha_creacion, cambio_pass, sede) VALUES
                 ('$cedula', '$nombre', '$login', '$correo', '$celular', '$telefono', '$skype', '1', CURRENT_TIMESTAMP, 1, $sede);";
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
         //Se retorna el identity
         $usuarioid = mysql_insert_id();
         return $usuarioid;
@@ -206,7 +206,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql2;
 
-        mysql_query($sql2);
+        mysqli_query($sql2);
         if (mysql_affected_rows() > 0) {
             $rta = "1";
             $this->registrarAccion($id_user, "ACTUALIZÓ HORARIO USUARIO ID: " . $id_user, "EXISTOSO");
@@ -231,7 +231,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql2;
 
-        mysql_query($sql2);
+        mysqli_query($sql2);
         if (mysql_affected_rows() > 0) {
             $rta = "1";
             $this->registrarAccion($id_user, "ACTUALIZÓ HORARIO USUARIO ID: " . $id_user, "EXISTOSO");
@@ -249,7 +249,7 @@ class sivisae_consultas extends Bd {
         //Se actualiza el usuario
         $sql2 = "update SIVISAE.usuario set correo='$correo', telefono=$telefono, celular=$celular, skype='$skype', fecha_nacimiento='$f_nac', actualiza_datos=0 where usuario_id=$id_upd";
         //echo $sql2;
-        mysql_query($sql2);
+        mysqli_query($sql2);
         if (mysql_affected_rows() > 0) {
             $rta = "1";
             $this->registrarAccion($id_upd, "ACTUALIZÓ PERFIL USUARIO ID: " . $id_upd, "EXISTOSO");
@@ -266,11 +266,11 @@ class sivisae_consultas extends Bd {
 
         //Se actualiza el usuario perfil
         $sql = "update SIVISAE.usuario_perfil set perfil_perfil_id=$perfil where usuario_perfil_id=$id_per_upd";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
 
         //Se actualiza el usuario
         $sql2 = "update SIVISAE.usuario set cedula='$cedula', nombre='$nombre', correo='$correo', telefono=$telefono, celular=$celular, skype='$skype', sede=$sede, fecha_creacion=CURRENT_TIMESTAMP where usuario_id=$id_upd";
-        mysql_query($sql2);
+        mysqli_query($sql2);
         if (mysql_affected_rows() > 0) {
             $rta = "Se actualizó la informacion del usuario correctamente.";
             $this->registrarAccion($usuarioid, "ACTUALIZAR USUARIO ID: " . $id_upd, "EXISTOSO");
@@ -286,7 +286,7 @@ class sivisae_consultas extends Bd {
     function actualizarEvento($titulo, $descripcion, $fecha_evento, $id_upd, $usuarioid) {
         //Se actualiza el evento
         $sql = "update SIVISAE.eventos set titulo_evento='$titulo', descripcion_evento='$descripcion', fecha_evento='$fecha_evento', estado=1 where id_evento=$id_upd";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         if (mysql_affected_rows() > 0) {
             $rta = "Se actualizó la informacion del evento correctamente.";
             $this->registrarAccion($usuarioid, "ACTUALIZAR EVENTO ID: " . $id_upd, "EXISTOSO");
@@ -301,13 +301,13 @@ class sivisae_consultas extends Bd {
     function eliminarUsuario($id_upd, $id_per_upd, $usuarioid) {
         // eliminar la relacion perfil usuario
         $sql = "update SIVISAE.usuario_perfil set estado_estado_id=3 where usuario_perfil_id=$id_per_upd";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         $banAct = mysql_affected_rows();
 
         if ($banAct > 0) {
             //eliminar el usuario
             $sql2 = "update usuario set estado_estado_id=3 where usuario_id=$id_upd";
-            mysql_query($sql2);
+            mysqli_query($sql2);
             $banAct = mysql_affected_rows();
             if ($banAct > 0) {
                 $rta = "Se eliminó el usuario correctamente.";
@@ -327,7 +327,7 @@ class sivisae_consultas extends Bd {
 //Metodo para la tranasaccionalidad de la eliminacion de noticias
     function eliminarNoticia($id_upd, $usuarioid) {
         $sql = "update SIVISAE.noticias set estado=3 where id_noticia=$id_upd";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         $banAct = mysql_affected_rows();
         if ($banAct > 0) {
             $rta = "Se eliminó la noticia correctamente.";
@@ -343,7 +343,7 @@ class sivisae_consultas extends Bd {
     function eliminarSeguimiento($id_eliminar, $usuarioid) {
         $sql = "update SIVISAE.eliminacion_seguimientos set estado_id=3, fecha_eliminacion=CURRENT_TIMESTAMP, usuario_elimina=$usuarioid where eliminacion_id=$id_eliminar";
 
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         $banAct = mysql_affected_rows();
         if ($banAct > 0) {
             //Desencadena en la actualizacion del numero de seguimientos realizados. Restar ese seguimiento en la asignacion_estudiante
@@ -357,7 +357,7 @@ class sivisae_consultas extends Bd {
                     AND es.`eliminacion_id`=$id_eliminar) AS a
                     )";
 
-            mysql_query($sql);
+            mysqli_query($this->getConexion(), $sql);
 
             // Se actualiza el estado del seguimiento
             $sql = "UPDATE SIVISAE.`seguimiento` SET `estado`=3 WHERE `seguimiento_id` in (SELECT * FROM (
@@ -368,7 +368,7 @@ class sivisae_consultas extends Bd {
                     AND ae.`auditor_estudiante_id`=s.`auditor_estudiante_id`
                     AND es.`eliminacion_id`=$id_eliminar) AS a)";
 
-            mysql_query($sql);
+            mysqli_query($this->getConexion(), $sql);
 
             $rta = "Se eliminó el seguimiento correctamente.";
             $this->registrarAccion($usuarioid, "ELIMINAR SEGUIMIENTO: " . $id_eliminar, "EXITOSO");
@@ -382,7 +382,7 @@ class sivisae_consultas extends Bd {
 //Metodo para la tranasaccionalidad de la eliminacion de eventos
     function eliminarEvento($id_upd, $usuarioid) {
         $sql = "update SIVISAE.eventos set estado=3 where id_evento=$id_upd";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         $banAct = mysql_affected_rows();
         if ($banAct > 0) {
             $rta = "Se eliminó el evento correctamente.";
@@ -397,10 +397,10 @@ class sivisae_consultas extends Bd {
     function rollbackUsuario($usuarioid, $perfilid, $usuario_log) {
         //Se elimina la relacion de perfil
         $sql = "update SIVISAE.usuario_perfil set estado_estado_id=3 where usuario_perfil_id=$perfilid";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         //Se elimina el usuario
         $sql = "update SIVISAE.usuario set estado_estado_id=3 where usuario_id=$usuarioid";
-        mysql_query($sql);
+        mysqli_query($this->getConexion(), $sql);
         //Se hace la auditoria de la tabla
         $this->registrarAccion($usuario_log, 'CREAR USUARIO', 'FALLO ENVIO CORREO CREANDO USUARIO: ' . $usuarioid);
     }
@@ -409,12 +409,12 @@ class sivisae_consultas extends Bd {
     function eliminarPerfil($id_upd, $usuarioid) {
         //se listan los usuarios asociados al perfil
         $sql = "select SIVISAE.usuario_usuario_id from SIVISAE.usuario_perfil where perfil_perfil_id=$id_upd";
-        $resUsu = mysql_query($sql);
+        $resUsu = mysqli_query($this->getConexion(), $sql);
         $banAct = mysql_affected_rows();
         if ($banAct > 0) {
             $listUsuarios = "";
             $cont = 0;
-            while ($row = mysql_fetch_array($resUsu)) {
+            while ($row = mysqli_fetch_array($resUsu)) {
                 if ($cont == 0)
                     $listUsuarios .= $row[0];
                 else
@@ -423,18 +423,18 @@ class sivisae_consultas extends Bd {
             }
             //se desactivan los usuarios asociados al perfil  
             $sqlUs = "update SIVISAE.usuario set estado_estado_id=3 where usuario_id in ($listUsuarios)";
-            mysql_query($sqlUs);
+            mysqli_query($sqlUs);
             //se desactiva la asociacion del perfil y usuarios
             $sqlUs = "update SIVISAE.usuario_perfil set estado_estado_id=3 where perfil_perfil_id=$id_upd";
-            mysql_query($sqlUs);
+            mysqli_query($sqlUs);
         }
 
         // se desactivan las opciones del perfil
         $sqlPer = "update SIVISAE.perfil_opcion set estado_estado_id=3 where perfil_perfil_id=$id_upd";
-        mysql_query($sqlPer);
+        mysqli_query($sqlPer);
         //se desactiva el perfil
         $sqlPer = "update SIVISAE.perfil set estado_estado_id=3 where perfil_id=$id_upd";
-        mysql_query($sqlPer);
+        mysqli_query($sqlPer);
 
         //se hace auditoria
         $this->registrarAccion($usuarioid, "ELIMINAR PERFIL: " . $id_upd, "EXITOSO");
@@ -446,14 +446,14 @@ class sivisae_consultas extends Bd {
     function crearUsuarioPerfil($usuarioid, $perfilid) {
         $sql = "INSERT INTO SIVISAE.usuario_perfil (usuario_usuario_id, perfil_perfil_id, estado_estado_id) VALUES "
                 . "($usuarioid, $perfilid, 1);";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $usuarioPerfilId = mysql_insert_id();
         return $usuarioPerfilId;
     }
 
     function crearPerfil($nombre) {
         $sqlinsert1 = "INSERT INTO SIVISAE.perfil (descripcion, estado_estado_id) VALUES ('$nombre', 1);";
-        $resultado = mysql_query($sqlinsert1);
+        $resultado = mysqli_query($sqlinsert1);
         $perfilid = mysql_insert_id();
 
         return $perfilid;
@@ -463,7 +463,7 @@ class sivisae_consultas extends Bd {
         $con = $perfil_id !== '5' ? '1' : '0';
         $sql = "INSERT INTO SIVISAE.consejero (usuario_usuario_id, estado_estado_id, con_general) 
                 VALUES ( $usuario_id, 1, $con)";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -471,20 +471,20 @@ class sivisae_consultas extends Bd {
         $aud = $perfil_id !== '2' ? '1' : '0';
         $sql = "INSERT INTO SIVISAE.auditor (usuario_usuario_id, estado_estado_id, aud_general) 
                 VALUES ( $usuario_id, 1, $aud)";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function updatePerfil($nombre, $perfil_id) {
         $sql = "UPDATE SIVISAE.perfil SET descripcion = '$nombre' WHERE perfil_id = $perfil_id;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function crearPerfilOpcion($perfilid, $opcion, $permisos, $filtro_zona, $filtro_escuela) {
         $sql2 = "INSERT INTO SIVISAE.perfil_opcion (perfil_perfil_id, opcion_opcion_id, opcion_crear, opcion_editar, opcion_eliminar, estado_estado_id, filtro_escuela, filtro_zona) VALUES 
                 ($perfilid, $opcion, $permisos, 1, $filtro_escuela, $filtro_zona);";
-        $resultado = mysql_query($sql2);
+        $resultado = mysqli_query($sql2);
 
         return $resultado;
     }
@@ -493,7 +493,7 @@ class sivisae_consultas extends Bd {
         $validar = "SELECT perfil_perfil_id, opcion_opcion_id, CONCAT(opcion_crear, ', ', opcion_editar, ', ', opcion_eliminar) AS permisos \n"
                 . "FROM SIVISAE.perfil_opcion \n"
                 . "WHERE perfil_perfil_id = $perfilid ;";
-        $resultado = mysql_query($validar);
+        $resultado = mysqli_query($validar);
         return $resultado;
     }
 
@@ -511,56 +511,56 @@ class sivisae_consultas extends Bd {
             $sql = "INSERT INTO perfil_opcion (perfil_perfil_id, opcion_opcion_id, opcion_crear, opcion_editar, opcion_eliminar, estado_estado_id, filtro_zona, filtro_escuela) VALUES 
                 ($perfilid, $opcion, $permisos, 1, $filtro_zona, $filtro_escuela);";
         }
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function opcionesPerfil() {
         $sql = "SELECT opcion_id, descripcion, url FROM SIVISAE.opcion WHERE estado_estado_id = 1";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function permisos($mod, $per) {
         $sql = "select opcion_crear,opcion_editar,opcion_eliminar from SIVISAE.perfil_opcion where opcion_opcion_id=$mod and perfil_perfil_id=$per";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function perfiles() {
         $sql = "SELECT perfil_id, descripcion FROM SIVISAE.perfil WHERE estado_estado_id = 1 order by perfil_id asc";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function traerSedes() {
         $sql = "select codigo, descripcion from SIVISAE.cead where estado_estado_id=1 order by descripcion asc";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function traerCentrosDirectorio($zona) {
         $sql = "SELECT c.`codigo`,c.`descripcion`, c.`direccion`,c.`telefono`,c.`correo_director`,c.`director`,c.`correo_centro`, UPPER( z.`descripcion`) AS zona FROM cead c, zona z WHERE`cead_id` NOT IN (148,149) AND c.`estado_estado_id` = 1 AND z.`zona_id`= c.`zona_zona_id` and `zona_zona_id`=$zona order by descripcion asc";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function consultarConsejerosCentro($centro) {
         $sql = "SELECT u.`nombre`, u.`correo`, u.`skype`, c.lunes, c.martes, c.miercoles, c.jueves, c.viernes, c.sabado FROM usuario u, consejero c WHERE u.sede=$centro AND u.`estado_estado_id`=1 AND c.`usuario_usuario_id`=u.`usuario_id`";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function registrarAccion($usuario_id, $accion, $valor) {
         $sql = "INSERT INTO SIVISAE.auditoria_usuario (usuario_id, accion, valor) VALUES "
                 . "($usuario_id,'$accion','$valor');";
-        $resultado = mysql_query($sql); // or die("USUARIO: $usuario_id, ".mysql_error()."\n ". $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql); // or die("USUARIO: $usuario_id, ".mysqli_error($this->getConexion())."\n ". $sql);
         return $resultado;
     }
 
     function traeUsrId($login) {
         $sql = "SELECT usuario_id, nombre, correo FROM SIVISAE.usuario WHERE login = '$login' AND estado_estado_id = 1 LIMIT 1;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -575,7 +575,7 @@ class sivisae_consultas extends Bd {
                 WHERE 
                     up.usuario_usuario_id = $usuarioid AND up.estado_estado_id = 1 and m.estado_estado_id=1
                 ORDER BY m.menu_id ASC ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -589,7 +589,7 @@ class sivisae_consultas extends Bd {
                 WHERE 
                     up.usuario_usuario_id = $usuarioid AND o.menu_menu_id = $menuid AND up.estado_estado_id = 1 AND o.estado_estado_id = 1  
                 ORDER BY o.opcion_id ASC ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -606,7 +606,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.estado_estado_id = 1  
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -623,7 +623,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.estado_estado_id = 1  
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -640,7 +640,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.estado_estado_id = 1  
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -657,7 +657,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.estado_estado_id = 1  
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -673,13 +673,13 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.usuario_id NOT IN (1, $usuarioid) AND u.estado_estado_id = 1
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function semanasCortesSeguimiento($periodo) {
         $sql = "SELECT `iteraciones` FROM SIVISAE.`corte_seguimiento` WHERE `periodo_academico_id`=$periodo";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -696,7 +696,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE u.usuario_id = $id_auditores
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -733,7 +733,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ;";
 
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -770,7 +770,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ;";
 
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -808,7 +808,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.= " and m.numero_matriculas = 1 ;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -846,7 +846,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.= " and m.numero_matriculas = 1 ;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -883,7 +883,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC"
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -920,7 +920,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC"
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -959,7 +959,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC "
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -998,7 +998,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " and m.numero_matriculas = 1 ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC "
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1022,32 +1022,32 @@ class sivisae_consultas extends Bd {
         }
 
         $sql.=" order by n.fecha_noticia desc limit 3";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna los eventos del año en curso del portal
     function consultarEventos() {
         $sql = "select id_evento,titulo_evento,descripcion_evento,year(fecha_evento), month(fecha_evento), day(fecha_evento), hour(fecha_evento), fecha_evento from eventos order by fecha_evento asc";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function periodos() {
         $sql = "SELECT periodo_academico_id, LOWER(descripcion) FROM SIVISAE.periodo_academico WHERE estado_estado_id = 1  ORDER BY codigo_peraca DESC ;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function periodos_administrador() {
         $sql = "SELECT periodo_academico_id, LOWER(descripcion) FROM SIVISAE.periodo_academico WHERE estado_estado_id in (1,2) ORDER BY codigo_peraca DESC ;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function cohortes_graduados() {
         $sql = " SELECT DISTINCT `ANIO`, anio FROM SIGRA.`tmp_titulos` ORDER BY ANIO; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1058,19 +1058,19 @@ class sivisae_consultas extends Bd {
             $sql = "SELECT z.zona_id, LOWER(z.descripcion) FROM SIVISAE.zona z, SIVISAE.cead c WHERE z.estado_estado_id = 1 AND c.`zona_zona_id`=z.`zona_id` AND c.`descripcion`='$filtro' ORDER BY z.descripcion ASC;";
         }
 //        echo $sql; 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function escuelas() {
         $sql = "SELECT DISTINCT(LOWER(escuela)) FROM SIVISAE.programa WHERE LOWER(escuela) NOT LIKE '%vicerrectoría%' AND LOWER(escuela) NOT LIKE '%gerencia%'  ORDER BY descripcion ASC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function escuelas_proyectos() {
         $sql = "SELECT DISTINCT(LOWER(escuela)), escuela FROM SIVISAE.programa WHERE LOWER(escuela) NOT LIKE '%vicerrectoría%' AND LOWER(escuela) NOT LIKE '%gerencia%'  ORDER BY descripcion ASC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1093,7 +1093,7 @@ class sivisae_consultas extends Bd {
 
         $sql = "SELECT `id_categoria`, `descripcion`, 0 as contador FROM  `atencion_categorias` WHERE `estado_id`=1 and $eje ORDER BY `descripcion` ASC";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1114,7 +1114,7 @@ class sivisae_consultas extends Bd {
         $sql.="estado_estado_id = 1 "
                 . " ORDER BY descripcion ASC;";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1127,7 +1127,7 @@ class sivisae_consultas extends Bd {
         $sql.=" estado_estado_id = 1 "
                 . " ORDER BY descripcion ASC;";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1139,7 +1139,7 @@ class sivisae_consultas extends Bd {
             $sql = "SELECT cead_id, codigo, LOWER(descripcion) FROM SIVISAE.cead WHERE estado_estado_id = 1  AND `zona_zona_id` IN (SELECT `zona_zona_id` FROM cead WHERE `descripcion`='$filtro') ORDER BY descripcion ASC;";
         }
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1149,7 +1149,7 @@ class sivisae_consultas extends Bd {
             $sql.= "  escuela IN ('$escuela') AND ";
         }
         $sql.=" tipo_programa_tipo_programa_id IN (1,2,4,5,7) ORDER BY descripcion ASC;";
-//        $resultado = mysql_query($sql);
+//        $resultado = mysqli_query($this->getConexion(), $sql);
         $resultado = $this->consulta2($sql);
         return $resultado;
     }
@@ -1174,7 +1174,7 @@ class sivisae_consultas extends Bd {
 
 
         $sql.=" tipo_programa_tipo_programa_id IN (1,2,7) ORDER BY descripcion ASC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         //echo $sql;
         return $resultado;
     }
@@ -1185,7 +1185,7 @@ class sivisae_consultas extends Bd {
             $sql.= "  escuela IN ('$escuela') AND ";
         }
         $sql.=" tipo_programa_tipo_programa_id IN (1,2,7,5) ORDER BY descripcion ASC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1202,13 +1202,13 @@ class sivisae_consultas extends Bd {
                 WHERE c.`usuario_usuario_id`=u.`usuario_id`
                 AND u.`usuario_id`=$id_usuario";
         //echo $sql;
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
 //Metodo para consultar la cantidad de registros de una tabla
     function cantRegistros($sql) {
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -1230,56 +1230,56 @@ class sivisae_consultas extends Bd {
         }
         $sql.="estado_estado_id = 1 "
                 . " ORDER BY descripcion ASC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de usuarios
     function traerUsuarios($page_position, $item_per_page) {
         $sql = "select u.cedula, u.nombre, u.fecha_expiracion, u.fecha_creacion, u.telefono, u.correo, u.ultimo_ing, c.descripcion, e.descripcion, u.usuario_id, u.login, up.perfil_perfil_id, c.cead_id, u.celular, u.skype , per.descripcion, u.sede, up.usuario_perfil_id from usuario u, cead c, estado e, usuario_perfil up, perfil per where u.estado_estado_id in (1,2) and c.codigo=u.sede and e.estado_id=u.estado_estado_id and up.usuario_usuario_id=u.usuario_id  and per.perfil_id=up.perfil_perfil_id order by u.nombre asc limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de perfiles
     function traerPerfiles($page_position, $item_per_page) {
         $sql = "select p.perfil_id, p.descripcion, e.descripcion from perfil p, estado e where p.estado_estado_id in (1,2) and e.estado_id=p.estado_estado_id order by p.descripcion asc limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de eventos
     function traerEventos($page_position, $item_per_page) {
         $sql = "select e.id_evento, e.titulo_evento, e.descripcion_evento, Date(e.fecha_evento) as fecha_evento, es.descripcion, TIME(e.fecha_evento) as hora_evento, HOUR(e.fecha_evento) as hora from eventos e, estado es where e.estado=es.estado_id and e.estado in (1,2) order by e.id_evento desc limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de eventos
     function traerEventosCalendario() {
         $sql = "SELECT e.id_evento, e.titulo_evento, e.descripcion_evento, DATE(e.fecha_evento) AS fecha_evento, es.descripcion, TIME(e.fecha_evento) AS hora_evento, HOUR(e.fecha_evento) AS hora FROM eventos e, estado es WHERE e.estado=es.estado_id AND e.estado IN (1) AND e.`fecha_evento` = CURDATE() ORDER BY e.id_evento DESC";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     //Metodo que retorna el listado de eventos
     function traerCumpeañosCalendario() {
         $sql = "SELECT u.`nombre`, c.`descripcion` FROM usuario u, cead c WHERE MONTH(u.fecha_nacimiento)= MONTH(CURDATE()) AND DAY(u.fecha_nacimiento)=DAY(CURDATE()) AND c.`codigo`=u.sede AND u.`estado_estado_id`=1";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de cortes de seguimiento
     function traerCortesSeguimiento($page_position, $item_per_page) {
         $sql = "select cs.corte_id, cs.periodo_academico_id, pa.descripcion as nombre_periodo, cs.no_semanas, cs.fecha_inicio, cs.fecha_fin, cs.iteraciones from corte_seguimiento cs, periodo_academico pa where cs.periodo_academico_id=pa.periodo_academico_id order by periodo_academico_id desc limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
 //Metodo que retorna el listado de noticias
     function traerNoticias($page_position, $item_per_page) {
         $sql = "select n.id_noticia,n.titulo_noticia,n.fecha_noticia,n.descripcion_noticia,n.link,e.descripcion from noticias n, estado e where n.estado=e.estado_id and e.estado_id=1 order by n.fecha_noticia desc limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1295,7 +1295,7 @@ class sivisae_consultas extends Bd {
                 AND pa.`periodo_academico_id`=ae.`periodo_academico_periodo_academico_id`
                 AND e.`estudiante_id`=ae.`estudiante_estudiante_id`
                 ORDER BY es.`fecha_radicacion` ASC limit $page_position, $item_per_page";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1305,7 +1305,7 @@ class sivisae_consultas extends Bd {
             $sql = "select periodo_academico_id, descripcion from periodo_academico where anno>=2015 and periodo_academico_id not in (select periodo_academico_id from corte_seguimiento) order by periodo_academico_id asc ";
         else
             $sql = "select periodo_academico_id, descripcion from periodo_academico where anno>=2015 order by periodo_academico_id asc ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1325,14 +1325,14 @@ class sivisae_consultas extends Bd {
                         WHERE  
                             m.estudiante_estudiante_id = $est AND pa.periodo_academico_id IN ($cadenaPeriodo) "
                     . " AND m.estudiante_estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM SIVISAE.auditor_estudiante); ";
-            $periodo = mysql_query($cons);
-            while ($row = mysql_fetch_array($periodo)) {
+            $periodo = mysqli_query($cons);
+            while ($row = mysqli_fetch_array($periodo)) {
                 $inserts[] = "($auditor, $est, $row[0], CURRENT_TIMESTAMP, $usuario_log)";
             }
         }
         $sql.= implode(", ", $inserts);
         $sql.=";";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1353,15 +1353,15 @@ class sivisae_consultas extends Bd {
                         WHERE  
                             m.estudiante_estudiante_id = $est AND pa.periodo_academico_id IN ($cadenaPeriodo) "
                     . " AND m.estudiante_estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM SIVISAE.consejero_estudiante); ";
-            $periodo = mysql_query($cons);
-            while ($row = mysql_fetch_array($periodo)) {
+            $periodo = mysqli_query($cons);
+            while ($row = mysqli_fetch_array($periodo)) {
                 $inserts[] = "($consejero, $est, $row[0], CURRENT_TIMESTAMP, $usuario_log, $tipoAsg)";
             }
         }
         $sql.= implode(", ", $inserts);
         $sql.=";";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1379,7 +1379,7 @@ class sivisae_consultas extends Bd {
                 GROUP BY A.tipo_est ";
 
         $sql.=";";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -1397,7 +1397,7 @@ class sivisae_consultas extends Bd {
             $tmp [] = "('" . implode("','", $est) . "', $usuario_log)";
         }
         $sql.= implode(", ", $tmp);
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         if ($resultado == 1) {
             $asignados = "SELECT  e.cedula, LOWER(e.nombre), u.cedula, LOWER(u.nombre) 
                     FROM SIVISAE.tmp_cargue_asignacion tmp 
@@ -1407,7 +1407,7 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                 WHERE e.estudiante_id IN (SELECT estudiante_estudiante_id FROM auditor_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-            $resultado_asignados = mysql_query($asignados);
+            $resultado_asignados = mysqli_query($asignados);
             if (mysql_num_rows($resultado_asignados) > 0) {
                 $resp [] = $resultado_asignados;
             } else {
@@ -1421,7 +1421,7 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca 
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                 WHERE e.estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM auditor_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-            $resultado_por_asignar = mysql_query($por_asignar);
+            $resultado_por_asignar = mysqli_query($por_asignar);
             if (mysql_num_rows($resultado_por_asignar) > 0) {
                 $resp [] = $resultado_por_asignar;
                 $insert = "INSERT INTO `SIVISAE`.`auditor_estudiante` 
@@ -1435,12 +1435,12 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca 
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                     WHERE e.estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM auditor_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-                $resultado2 = mysql_query($insert) or die(mysql_error() . $insert);
+                $resultado2 = mysqli_query($insert) or die(mysqli_error($this->getConexion()) . $insert);
             } else {
                 $resp [] = '0';
             }
 
-            $limpia_tmp = mysql_query("DELETE FROM tmp_cargue_asignacion WHERE usuario_id = $usuario_log");
+            $limpia_tmp = mysqli_query("DELETE FROM tmp_cargue_asignacion WHERE usuario_id = $usuario_log");
         }
         $resp [] = count($cadenaEstudiantes);
         return $resp;
@@ -1460,7 +1460,7 @@ class sivisae_consultas extends Bd {
             $tmp [] = "('" . implode("','", $est) . "', $usuario_log)";
         }
         $sql.= implode(", ", $tmp);
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         if ($resultado == 1) {
             $asignados = "SELECT e.cedula, LOWER(e.nombre), u.cedula, LOWER(u.nombre),tipo_asignacion 
                     FROM SIVISAE.tmp_cargue_asignacion_consejeros tmp 
@@ -1470,7 +1470,7 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                 WHERE e.estudiante_id IN (SELECT estudiante_estudiante_id FROM consejero_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-            $resultado_asignados = mysql_query($asignados);
+            $resultado_asignados = mysqli_query($asignados);
             if (mysql_num_rows($resultado_asignados) > 0) {
                 $resp [] = $resultado_asignados;
             } else {
@@ -1484,7 +1484,7 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca 
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                 WHERE e.estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM consejero_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-            $resultado_por_asignar = mysql_query($por_asignar);
+            $resultado_por_asignar = mysqli_query($por_asignar);
             if (mysql_num_rows($resultado_por_asignar) > 0) {
                 $resp [] = $resultado_por_asignar;
                 $insert = "INSERT INTO `SIVISAE`.`consejero_estudiante` 
@@ -1498,12 +1498,12 @@ class sivisae_consultas extends Bd {
                         INNER JOIN SIVISAE.periodo_academico pa ON pa.codigo_peraca = tmp.peraca 
                         INNER JOIN SIVISAE.matricula m ON m.estudiante_estudiante_id = e.estudiante_id AND m.periodo_academico_periodo_academico_id = pa.periodo_academico_id 
                     WHERE e.estudiante_id NOT IN (SELECT estudiante_estudiante_id FROM consejero_estudiante WHERE periodo_academico_periodo_academico_id = pa.periodo_academico_id)";
-                $resultado2 = mysql_query($insert) or die(mysql_error() . $insert);
+                $resultado2 = mysqli_query($insert) or die(mysqli_error($this->getConexion()) . $insert);
             } else {
                 $resp [] = '0';
             }
 
-            $limpia_tmp = mysql_query("DELETE FROM tmp_cargue_asignacion WHERE usuario_id = $usuario_log");
+            $limpia_tmp = mysqli_query("DELETE FROM tmp_cargue_asignacion WHERE usuario_id = $usuario_log");
         }
         $resp [] = count($cadenaEstudiantes);
         return $resp;
@@ -1515,13 +1515,13 @@ class sivisae_consultas extends Bd {
                 FROM SIVISAE.opcion
                     LEFT OUTER JOIN perfil_opcion ON opcion_opcion_id = opcion_id AND perfil_perfil_id = $perfil_id";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function updateNombrePerfil($perfil_id, $nombre) {
         $sql = "UPDATE SIVISAE.perfil SET descripcion = '$nombre' WHERE perfil_id = $perfil_id";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1551,7 +1551,7 @@ class sivisae_consultas extends Bd {
         }
 
         $sql.=";";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -1582,7 +1582,7 @@ class sivisae_consultas extends Bd {
             $sql.= " AND p.programa_id IN ($programa) ";
         }
         $sql.= ";";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1612,7 +1612,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.= "ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC"
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1645,7 +1645,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " ORDER BY c.descripcion, p.escuela, p.descripcion, e.nombre ASC "
                 . " LIMIT $page_position, $item_per_page; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
@@ -1685,7 +1685,7 @@ class sivisae_consultas extends Bd {
 
         $sql.=" AND ae.`tipo_asignacion` IN ($tipo_asignacion) ;";
         //echo ' <br><br> ' . $sql;
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -1724,7 +1724,7 @@ class sivisae_consultas extends Bd {
 
         $sql.=";";
         //echo ' <br><br> '.$sql;
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -1763,7 +1763,7 @@ class sivisae_consultas extends Bd {
       $sql.= " ORDER BY e.nombre ASC"
       . " ; ";
       //echo ' <br><br> :  ' . $sql;
-      $resultado = mysql_query($sql);
+      $resultado = mysqli_query($this->getConexion(), $sql);
       return $resultado;
       }
      */
@@ -1831,7 +1831,7 @@ class sivisae_consultas extends Bd {
         $sql.= " AND ae.`tipo_asignacion` IN ($tipo_asignacion) ORDER BY e.nombre ASC"
                 . " LIMIT $page_position, $item_per_page; ";
         //echo ' <br><br> estudiantesAsignados2Consejeria:  ' . $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1896,7 +1896,7 @@ class sivisae_consultas extends Bd {
         $sql.= "ORDER BY e.nombre ASC"
                 . " LIMIT $page_position, $item_per_page; ";
         //echo ' <br><br> '.$sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1904,7 +1904,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT CASE WHEN tipo_induccion = 1 THEN 'Presencial'	ELSE 'Virtual' END AS tipo_induccion, SUBSTRING(fecha,1,10) AS fecha  
                 FROM induccion_estudiante 
                 WHERE estudiante_id = $est_id";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1936,7 +1936,7 @@ class sivisae_consultas extends Bd {
             $sql.= " and pro.programa_id in ($programa) ";
         }
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -1969,7 +1969,7 @@ class sivisae_consultas extends Bd {
             $sql.= " and pro.programa_id in ($programa) ";
         }
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2002,7 +2002,7 @@ class sivisae_consultas extends Bd {
             $sql.= " and pro.programa_id in ($programa) ";
         }
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2034,7 +2034,7 @@ class sivisae_consultas extends Bd {
             $sql.= " and pro.programa_id in ($programa) ";
         }
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2087,7 +2087,7 @@ class sivisae_consultas extends Bd {
                 WHERE A.induccion LIKE '%$filtro%' OR A.cedula LIKE '%$filtro%' OR LOWER(A.nombre) LIKE '%$filtro%' OR A.escuela LIKE '%$filtro%' 
                      OR A.nom_prog LIKE '%$filtro%' OR A.cead LIKE '%$filtro%'  OR A.est_carac LIKE '%$filtro%'  OR A.zona LIKE '%$filtro%'  ; ";
         //echo ' <br><br> ' . $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2139,7 +2139,7 @@ class sivisae_consultas extends Bd {
                 WHERE A.induccion LIKE '%$filtro%' OR A.cedula LIKE '%$filtro%' OR LOWER(A.nombre) LIKE '%$filtro%' OR A.escuela LIKE '%$filtro%' 
                      OR A.nom_prog LIKE '%$filtro%' OR A.cead LIKE '%$filtro%'  OR A.est_carac LIKE '%$filtro%'  OR A.zona LIKE '%$filtro%'  ; ";
         //echo ' <br><br> '.$sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2181,7 +2181,7 @@ class sivisae_consultas extends Bd {
       OR A.tipo_est LIKE '%$filtro%'
       ; ";
       //echo ' <br><br> ' . $sql;
-      $resultado = mysql_query($sql);
+      $resultado = mysqli_query($this->getConexion(), $sql);
       return $resultado;
       }
      */
@@ -2242,7 +2242,7 @@ class sivisae_consultas extends Bd {
                      OR A.nom_prog LIKE '%$filtro%' OR A.cead LIKE '%$filtro%'  OR A.est_carac LIKE '%$filtro%' OR A.zona LIKE '%$filtro%' 
                          OR A.tipo_est LIKE '%$filtro%' ; ";
         //echo ' filtro excel ' . $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2299,7 +2299,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.= " AND ae.`tipo_asignacion` IN ($tipo_asignacion) ORDER BY e.nombre ASC";
         //echo ' abierto excel:  ' . $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2367,7 +2367,7 @@ class sivisae_consultas extends Bd {
                          OR A.tipo_est LIKE '%$filtro%'  
                  LIMIT $page_position, $item_per_page; ";
         //echo ' <br><br> ' . $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2434,7 +2434,7 @@ class sivisae_consultas extends Bd {
                          OR A.tipo_est LIKE '%$filtro%'  
                  LIMIT $page_position, $item_per_page; ";
         //echo ' <br><br> '.$sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2485,7 +2485,7 @@ class sivisae_consultas extends Bd {
                 GROUP BY s.seguimiento_id  
                 ORDER BY s.seguimiento_id ASC;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2511,7 +2511,7 @@ class sivisae_consultas extends Bd {
                     LEFT OUTER JOIN SIVISAE.convenio_estudiante ce ON ce.estudiante_estudiante_id = ae.estudiante_estudiante_id AND ce.periodo_academico_periodo_academico_id = ae.periodo_academico_periodo_academico_id
                     LEFT OUTER JOIN SIVISAE.convenios co ON co.convenios_id = ce.convenios_convenios_id  
                 WHERE ae.estudiante_estudiante_id = $est_id  AND ae.periodo_academico_periodo_academico_id = $periodo;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2534,7 +2534,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.usuario_perfil up ON up.usuario_usuario_id = u.usuario_id 
                 WHERE $per  
                 ORDER BY u.nombre ASC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
@@ -2559,7 +2559,7 @@ class sivisae_consultas extends Bd {
                 WHERE $per  
                 ORDER BY u.nombre ASC; ";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
@@ -2584,14 +2584,14 @@ class sivisae_consultas extends Bd {
                 WHERE $per  
                 ORDER BY u.nombre ASC; ";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
 
     function traerAcciones($tipo) {
         $sql = "SELECT acciones_id, titulo, tipo, asunto FROM SIVISAE.acciones WHERE estado=1 and tipo = '$tipo';";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2609,7 +2609,7 @@ class sivisae_consultas extends Bd {
                     INNER JOIN SIVISAE.corte_seguimiento cs ON cs.periodo_academico_id = ae.periodo_academico_periodo_academico_id
                 WHERE ae.estudiante_estudiante_id = $est_id  AND ae.periodo_academico_periodo_academico_id = $periodo;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2640,7 +2640,7 @@ class sivisae_consultas extends Bd {
                     WHERE e.estudiante_id = $est_id AND m.periodo_academico_periodo_academico_id = $periodo and em.periodo_academico_id = $periodo 
                     GROUP BY ma.materia_id)A; ";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2672,14 +2672,14 @@ class sivisae_consultas extends Bd {
                 WHERE e.estudiante_id = $est_id AND m.periodo_academico_periodo_academico_id = $periodo AND em.materia_id = $mat_id AND em.`periodo_academico_id`=$periodo; ";
 
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function traerSeguimiento($est_id, $periodo, $auditor_estudiante_id, $tipo) {
         $sql = "CALL SIVISAE.traer_seguimiento($auditor_estudiante_id, $est_id, $periodo, '$tipo');";
-        $cons2 = mysql_query($sql) or die(mysql_error() . $sql);
-        $seg = mysql_fetch_array($cons2);
+        $cons2 = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
+        $seg = mysqli_fetch_array($cons2);
         return $seg[0];
     }
 
@@ -2692,18 +2692,18 @@ class sivisae_consultas extends Bd {
                     ('$auditor_estudiante_id', CURRENT_TIMESTAMP, '$web_c', '$chat', '$msj', '$foro', '$seg_eva', '$observacion', '$pqr', 
                     '$h_acomp', '$web_c_t', '$chat_t', '$msj_t', '$foro_t', '$seg_eva_t', '$observacion_t', '$resp_t', '$estudiante_materia_id', '$seguimiento_id', 1);";
 
-        $res = mysql_query($sql) or die(mysql_error());
+        $res = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
 
 
-        $cons = mysql_query("SELECT seguimiento_aduditor_estudiante_id 
+        $cons = mysqli_query("SELECT seguimiento_aduditor_estudiante_id 
                     FROM SIVISAE.seguimiento_auditor_estudiante
                     WHERE auditor_estudiante_id = $auditor_estudiante_id AND estudiante_materia_id = $estudiante_materia_id and seguimiento_id=$seguimiento_id ");
-        $resultado = mysql_fetch_array($cons);
+        $resultado = mysqli_fetch_array($cons);
 
         $seguimiento = $resultado[0];
 
-//        $hallazgo = mysql_query("INSERT INTO SIVISAE.hallazgos (fk_seguimiento,estado_hallazgo,fecha_creacion) VALUES "
-//                . "('$seguimiento', '1', CURRENT_DATE);") or die(mysql_error());
+//        $hallazgo = mysqli_query("INSERT INTO SIVISAE.hallazgos (fk_seguimiento,estado_hallazgo,fecha_creacion) VALUES "
+//                . "('$seguimiento', '1', CURRENT_DATE);") or die(mysqli_error($this->getConexion()));
 
         return $seguimiento;
     }
@@ -2729,7 +2729,7 @@ class sivisae_consultas extends Bd {
                   respuesta_tutor = '$resp_t',
                   iteracion = iteracion + 1
                 WHERE seguimiento_aduditor_estudiante_id = '$seguimiento_aduditor_estudiante_id';";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2745,20 +2745,20 @@ class sivisae_consultas extends Bd {
         $sql .= implode(", ", $insert);
         $sql .=";";
 
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
     function updateSeguimiento($seguimiento_id, $auditor_estudiante_id, $est_id, $periodo) {
         $sql = "CALL SIVISAE.update_seguimiento($seguimiento_id, $auditor_estudiante_id, $est_id, $periodo);";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function crearObservacion($seguimiento, $observacion, $tipo) {
         $sql = "INSERT INTO SIVISAE.seguimiento_observacion (seguimiento_auditor_estudiante_id, observacion, fecha, tipo) VALUES "
                 . "('$seguimiento', '$observacion', CURRENT_TIMESTAMP, '$tipo');";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -2771,7 +2771,7 @@ class sivisae_consultas extends Bd {
                 WHERE accs.`seguimiento_auditor_estudiante_id`=$seguimiento_aud_est_id 
                 AND accs.`acciones_id`=acc.`acciones_id`
                 ORDER BY accs.`fecha_crea` ASC;";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2781,7 +2781,7 @@ class sivisae_consultas extends Bd {
                 FROM `seguimiento_observacion` sobs 
                 WHERE sobs.`seguimiento_auditor_estudiante_id`=$seguimiento_aud_est_id 
                 ORDER BY sobs.`fecha` ASC; ";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2797,7 +2797,7 @@ class sivisae_consultas extends Bd {
                     FROM SIVISAE.acciones_seguimiento ase 
                        INNER JOIN SIVISAE.acciones a ON a.acciones_id = ase.acciones_id 
                     WHERE ase.seguimiento_auditor_estudiante_id = $seguimiento_aud_est_id AND ase.estado ='a' AND a.tipo LIKE '%_t';";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2807,7 +2807,7 @@ class sivisae_consultas extends Bd {
                             estado = 'c',  
                             fecha_cierre = CURRENT_TIMESTAMP    
                          WHERE acciones_seguimiento_id = $accion_seg;  ";
-            $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+            $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         }
 
 
@@ -2863,7 +2863,7 @@ class sivisae_consultas extends Bd {
                    INNER JOIN SIVISAE.municipio mu ON mu.municipio_id = c.municipio_municipio_id
                 $where ; ";
 
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2879,7 +2879,7 @@ class sivisae_consultas extends Bd {
                     . "FROM SIVISAE.seguimiento_observacion "
                     . "WHERE seguimiento_auditor_estudiante_id = $seg_aud and tipo = '$tipo';";
         }
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
@@ -2893,10 +2893,10 @@ class sivisae_consultas extends Bd {
                   INNER JOIN SIVISAE.estudiante_materia em ON em.estudiante_materia_id = sae.estudiante_materia_id 
                   INNER JOIN SIVISAE.materia m ON m.materia_id = em.materia_id 
                 WHERE s.seguimiento_id = $seguimiento_id AND ase.estado = 'a'";
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         $obsFinal = array();
         $compare = "";
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $acc_id = $row[0];
             $titulo = $row[1];
             if ($acc_id !== $compare) {
@@ -2949,7 +2949,7 @@ class sivisae_consultas extends Bd {
       }
       $sql.= "ORDER BY e.nombre ASC; ";
 
-      $resultado = mysql_query($sql);
+      $resultado = mysqli_query($this->getConexion(), $sql);
       return $resultado;
       } */
 
@@ -2994,7 +2994,7 @@ class sivisae_consultas extends Bd {
         }
 
         $sql.= " ORDER BY e.nombre ASC )A; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3050,7 +3050,7 @@ class sivisae_consultas extends Bd {
       WHERE A.induccion LIKE '%$filtro%' OR A.cedula LIKE '%$filtro%' OR A.nombre LIKE '%$filtro%' OR A.escuela LIKE '%$filtro%'
       OR A.nom_prog LIKE '%$filtro%' OR A.est_carac LIKE '%$filtro%' ; ";
 
-      $resultado = mysql_query($sql) or die(mysql_error());
+      $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
       return $resultado;
       }
      */
@@ -3103,7 +3103,7 @@ class sivisae_consultas extends Bd {
                 WHERE A.induccion LIKE '%$filtro%' OR A.cedula LIKE '%$filtro%' OR LOWER(A.nombre) LIKE '%$filtro%' OR A.escuela LIKE '%$filtro%' 
                      OR A.nom_prog LIKE '%$filtro%' OR A.cead LIKE '%$filtro%'  OR A.est_carac LIKE '%$filtro%' OR A.zona LIKE '%$filtro%' 
                          OR A.tipo_est LIKE '%$filtro%'; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3112,7 +3112,7 @@ class sivisae_consultas extends Bd {
                 . "FROM `auditor_estudiante` ae, `auditor` a, usuario u, `cead` c, `periodo_academico` pa "
                 . "WHERE `estudiante_estudiante_id`=$id_estudiante AND a.`auditor_id`=ae.`auditor_auditor_id` AND u.`usuario_id`=a.`usuario_usuario_id` AND c.`codigo`=u.`sede` "
                 . "AND pa.`periodo_academico_id`= ae.`periodo_academico_periodo_academico_id` ORDER BY  ae.`periodo_academico_periodo_academico_id` DESC";
-        $resultado = mysql_query($sql) or die(mysql_error());
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
         return $resultado;
     }
 
@@ -3121,7 +3121,7 @@ class sivisae_consultas extends Bd {
                 . "e.`fecha_nacimiento`,e.`genero`,e.`estado_civil`,e.`telefono`,  c.`descripcion` AS centro "
                 . "FROM `estudiante` e, `cead` c "
                 . "WHERE (e.nombre LIKE '%$documento_buscar%' OR e.cedula LIKE '%$documento_buscar%' OR e.`correo` LIKE '%$documento_buscar%' ) AND c.`cead_id`=e.`cead_cead_id`";
-        $resultado = mysql_query($sql) or die(mysql_error());
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
         return $resultado;
     }
 
@@ -3145,14 +3145,14 @@ class sivisae_consultas extends Bd {
                     WHERE (u.nombre LIKE '%$buscar%' OR u.cedula LIKE '%$buscar%') AND a.estado_estado_id = 1 
                     ORDER BY u.nombre ASC;";
         }
-        $resultado = mysql_query($sql) or die(mysql_error() . $sql);
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $resultado;
     }
 
     function consultarMatriculasEstudianteDirectorio($id_est) {
         $sql = "SELECT m.`estudiante_estudiante_id`, p.`descripcion`, pro.`descripcion`, m.`tipo_estudiante`, m.`numero_matriculas` "
                 . "FROM `matricula` m, `periodo_academico` p, programa pro WHERE `estudiante_estudiante_id`=$id_est AND m.`periodo_academico_periodo_academico_id`=p.`periodo_academico_id` AND pro.`programa_id`=m.`programa_programa_id`";
-        $resultado = mysql_query($sql) or die(mysql_error());
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
         return $resultado;
     }
 
@@ -3160,7 +3160,7 @@ class sivisae_consultas extends Bd {
     function generarSolicitudEliminacion($observacion_solicitud, $id_seguimiento) {
         //Se valida si ya existe la solicitud
         $sql = "select count(*) as conteo from SIVISAE.eliminacion_seguimientos where `seguimiento_id`=$id_seguimiento";
-        $resultado = mysql_query($sql) or die(mysql_error());
+        $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
 
         while ($fila = mysql_fetch_assoc($resultado)) {
             $solicitud = $fila['conteo'];
@@ -3172,7 +3172,7 @@ class sivisae_consultas extends Bd {
         } else {
             //Se inserta la solicitud
             $sql = "INSERT INTO SIVISAE.`eliminacion_seguimientos` (`observacion`,`seguimiento_id`,`estado_id`, fecha_radicacion) VALUES ('$observacion_solicitud',$id_seguimiento,1, CURRENT_TIMESTAMP)";
-            $res = mysql_query($sql);
+            $res = mysqli_query($this->getConexion(), $sql);
             //Se retorna el identity
             $id = 0;
             $id = mysql_insert_id();
@@ -3209,7 +3209,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " ORDER BY u.`nombre` ASC;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -3239,7 +3239,7 @@ class sivisae_consultas extends Bd {
             $sql.= " and u.nombre LIKE '%$filtro%' OR z.descripcion LIKE '%$filtro%' OR c.descripcion LIKE '%$filtro%' ";
         }
         $sql.= " ORDER BY u.`nombre` ASC LIMIT $page_position, $item_per_page;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3272,7 +3272,7 @@ class sivisae_consultas extends Bd {
         }
 
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3312,7 +3312,7 @@ class sivisae_consultas extends Bd {
         }
 
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3347,7 +3347,7 @@ class sivisae_consultas extends Bd {
         }
 
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3420,7 +3420,7 @@ class sivisae_consultas extends Bd {
       }
       $sql.= ";";
 
-      $resultado = mysql_query($sql);
+      $resultado = mysqli_query($this->getConexion(), $sql);
       return $resultado;
       }
 
@@ -3431,7 +3431,7 @@ class sivisae_consultas extends Bd {
       WHERE ae.periodo_academico_periodo_academico_id=$periodo
       AND ie.`tipo_induccion` IS NOT NULL
       GROUP BY ae.`auditor_auditor_id`;";
-      $resultado = mysql_query($sql);
+      $resultado = mysqli_query($this->getConexion(), $sql);
 
       while ($fila = mysql_fetch_assoc($resultado)) {
       $arreglo[] = array(
@@ -3512,7 +3512,7 @@ class sivisae_consultas extends Bd {
             $sql.= " LIMIT $page_position, $item_per_page";
         }
         $sql.=";";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3557,7 +3557,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.= ";";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3607,7 +3607,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.=";";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3618,10 +3618,10 @@ class sivisae_consultas extends Bd {
                 AND cs.`periodo_academico_id`=$periodo
                 AND css.`fecha_inicia_cs` >=DATE('$fecha_ini') AND css.`fecha_fin_cs`<=DATE('$fecha_fin')";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         $cantidad = 0;
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $cantidad = $row[0];
         }
 
@@ -3675,7 +3675,7 @@ class sivisae_consultas extends Bd {
         }
         $sql.=";";
 
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         return $result;
     }
 
@@ -3696,19 +3696,19 @@ class sivisae_consultas extends Bd {
                  WHERE usr_recibe = $usr_id 
                  ORDER BY n.fecha_envio DESC 
                   LIMIT $page_position, $item_per_page;";
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         return $result;
     }
 
     function getCantNotificaciones($usr_id) {
         $sql = "SELECT COUNT(1) FROM SIVISAE.notificaciones WHERE usr_recibe = $usr_id AND estado = 1 AND fecha_lectura IS NULL;";
-        $result = mysql_fetch_array(mysql_query($sql));
+        $result = mysqli_fetch_array(mysqli_query($this->getConexion(), $sql));
         return $result[0];
     }
 
     function getTotalNotificaciones($usr_id) {
         $sql = "SELECT COUNT(1) FROM SIVISAE.notificaciones WHERE usr_recibe = $usr_id;";
-        $result = mysql_fetch_array(mysql_query($sql));
+        $result = mysqli_fetch_array(mysqli_query($this->getConexion(), $sql));
         return $result[0];
     }
 
@@ -3717,7 +3717,7 @@ class sivisae_consultas extends Bd {
                    (`notificacion`, `tipo`, `usr_envia`, `usr_recibe`, `estado`, `fecha_envio`)
                 VALUES 
                    ('$notif', '$tipo', '$usr_envia', '$usr_recibe', '1', CURRENT_TIMESTAMP);";
-        $result = mysql_query($sql) or die(mysql_error() . $sql);
+        $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $result;
     }
 
@@ -3738,7 +3738,7 @@ class sivisae_consultas extends Bd {
                  FROM SIVISAE.notificaciones n 
                    INNER JOIN usuario u ON u.usuario_id = n.usr_envia
                  WHERE n.notificacion_id = $notif_id;";
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         return $result;
     }
 
@@ -3746,7 +3746,7 @@ class sivisae_consultas extends Bd {
         $sql = "UPDATE SIVISAE.notificaciones "
                 . "SET fecha_lectura = CURRENT_TIMESTAMP, estado = 2 "
                 . "WHERE notificacion_id = $notif_id AND estado = 1 AND fecha_lectura IS NULL;";
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         return $result;
     }
 
@@ -3758,10 +3758,10 @@ class sivisae_consultas extends Bd {
                   INNER JOIN SIVISAE.acciones a ON a.acciones_id = ase.acciones_id AND tipo IN ('preven_e', 'correc_e')
                 WHERE s.seguimiento_id = $seguimiento_id
                 ORDER BY esta ASC LIMIT 1; ";
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         $est = "";
         if (mysql_num_rows($result) > 0) {
-            $est = mysql_fetch_array($result);
+            $est = mysqli_fetch_array($result);
         } else {
             $est = "n";
         }
@@ -3770,7 +3770,7 @@ class sivisae_consultas extends Bd {
 
     function getGenerales() {
         $sql = "Select generalidad_id, descripcion from SIVISAE.generalidades where estado =1;";
-        $result = mysql_query($sql);
+        $result = mysqli_query($this->getConexion(), $sql);
         return $result;
     }
 
@@ -3782,7 +3782,7 @@ class sivisae_consultas extends Bd {
         foreach ($generalidades as $genral) {
             $sqlGralidades = "select * from `SIVISAE`.`seguimiento_generalidad` where generalidad_id = " . $genral . " and seguimiento_id = $seguimiento_id and fecha_cierre is null;";
             //echo $sqlGralidades;
-            $valida = mysql_query($sqlGralidades);
+            $valida = mysqli_query($sqlGralidades);
             if (mysql_num_rows($valida) === 0) {
                 $arr[] = "('$seguimiento_id', '$genral', CURRENT_TIMESTAMP)";
             }
@@ -3791,15 +3791,15 @@ class sivisae_consultas extends Bd {
         $sql .= ";";
 
         if (count($arr) > 0) {
-            $result = mysql_query($sql) or die(mysql_error() . $sql);
+            $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
             return $result;
         }
     }
 
     function getGeneralidades($seguimiento_id) {
-        $gnral = mysql_query("select generalidad_id from `SIVISAE`.`seguimiento_generalidad` where seguimiento_id = $seguimiento_id and fecha_cierre is null;");
+        $gnral = mysqli_query("select generalidad_id from `SIVISAE`.`seguimiento_generalidad` where seguimiento_id = $seguimiento_id and fecha_cierre is null;");
         $arr = array();
-        while ($row = mysql_fetch_array($gnral)) {
+        while ($row = mysqli_fetch_array($gnral)) {
             $arr [] = $row[0];
         }
         return $arr;
@@ -3810,14 +3810,14 @@ class sivisae_consultas extends Bd {
                 SET 
                   `fecha_cierre` = CURRENT_TIMESTAMP
                 WHERE `generalidad_id` IN ($generalidades) AND `seguimiento_id` = '$seguimiento_id' and fecha_cierre is null;";
-        $result = mysql_query($sql) or die(mysql_error() . $sql);
+        $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $result;
     }
 
     function filtro_variables($modulo, $pf) {
         $sql = "SELECT `filtro_escuela`, `filtro_zona` FROM `perfil_opcion` WHERE `opcion_opcion_id`=$modulo AND `perfil_perfil_id`=$pf";
         //echo $sql; 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3828,7 +3828,7 @@ class sivisae_consultas extends Bd {
             $sql = "SELECT z.zona_id, LOWER(z.descripcion) FROM SIVISAE.zona z, SIVISAE.cead c WHERE z.estado_estado_id = 1 AND c.`zona_zona_id`=z.`zona_id` AND c.`descripcion`='$centro_usuario' ORDER BY z.descripcion ASC;";
         }
 //        echo $sql; 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3849,7 +3849,7 @@ class sivisae_consultas extends Bd {
         }
 
 //        echo $sql; 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3863,7 +3863,7 @@ class sivisae_consultas extends Bd {
         }
 
 //        echo $sql; 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3884,7 +3884,7 @@ class sivisae_consultas extends Bd {
         }
 
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -3946,7 +3946,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql.' ';
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -3992,7 +3992,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " ORDER BY e.`nombre` ASC )AS a LIMIT $page_position, $item_per_page;";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -4080,7 +4080,7 @@ class sivisae_consultas extends Bd {
 //        $sql.= " ORDER BY e.`nombre` ASC )AS a LIMIT $page_position, $item_per_page;";
         //echo $sql."<br>";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -4136,7 +4136,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " ORDER BY e.`nombre` ASC )AS a ";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -4149,12 +4149,12 @@ class sivisae_consultas extends Bd {
 
         //echo $sql;
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         //Segun el tipo se busca en la tabla
         $id_induccion = 0;
         $tipo = 0;
 
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $id_induccion = $row[0];
             $tipo = $row[3];
         }
@@ -4175,7 +4175,7 @@ class sivisae_consultas extends Bd {
 
         //echo '  '.$sql;
         //Se retornan los resultados
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -4188,7 +4188,7 @@ class sivisae_consultas extends Bd {
         }
 
         //echo $query;
-        $resultado = mysql_query($query);
+        $resultado = mysqli_query($query);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -4278,7 +4278,7 @@ class sivisae_consultas extends Bd {
 
 
         //echo ($query);
-        $resultado = mysql_query($query);
+        $resultado = mysqli_query($query);
         return $resultado;
     }
 
@@ -4286,7 +4286,7 @@ class sivisae_consultas extends Bd {
         $opc = 0;
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
-        $contRes = mysql_query($sql);
+        $contRes = mysqli_query($this->getConexion(), $sql);
         while ($fila = mysql_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
@@ -4298,7 +4298,7 @@ class sivisae_consultas extends Bd {
             $opc = 1;
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
-            $contRes = mysql_query($sql);
+            $contRes = mysqli_query($this->getConexion(), $sql);
             while ($fila = mysql_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
@@ -4310,7 +4310,7 @@ class sivisae_consultas extends Bd {
                 $opc = 2;
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
-                $contRes = mysql_query($sql);
+                $contRes = mysqli_query($this->getConexion(), $sql);
                 while ($fila = mysql_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
@@ -4359,7 +4359,7 @@ class sivisae_consultas extends Bd {
 
         $sql.=" LIMIT 1;";
         //echo " ".$sql;
-        $dataRes = mysql_query($sql);
+        $dataRes = mysqli_query($this->getConexion(), $sql);
         return $dataRes;
     }
 
@@ -4367,7 +4367,7 @@ class sivisae_consultas extends Bd {
         $opc = 0;
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
-        $contRes = mysql_query($sql);
+        $contRes = mysqli_query($this->getConexion(), $sql);
         while ($fila = mysql_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
@@ -4382,7 +4382,7 @@ class sivisae_consultas extends Bd {
             $opc = 1;
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
-            $contRes = mysql_query($sql);
+            $contRes = mysqli_query($this->getConexion(), $sql);
             while ($fila = mysql_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
@@ -4397,7 +4397,7 @@ class sivisae_consultas extends Bd {
                 $opc = 2;
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
-                $contRes = mysql_query($sql);
+                $contRes = mysqli_query($this->getConexion(), $sql);
                 while ($fila = mysql_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
@@ -4450,7 +4450,7 @@ class sivisae_consultas extends Bd {
 
         $sql.=" LIMIT 1;";
         //echo " ".$sql;
-        $dataRes = mysql_query($sql);
+        $dataRes = mysqli_query($this->getConexion(), $sql);
         return $dataRes;
     }
 
@@ -4458,7 +4458,7 @@ class sivisae_consultas extends Bd {
         $opc = 0;
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
-        $contRes = mysql_query($sql);
+        $contRes = mysqli_query($this->getConexion(), $sql);
         while ($fila = mysql_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
@@ -4475,7 +4475,7 @@ class sivisae_consultas extends Bd {
             $opc = 1;
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
-            $contRes = mysql_query($sql);
+            $contRes = mysqli_query($this->getConexion(), $sql);
             while ($fila = mysql_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
@@ -4490,7 +4490,7 @@ class sivisae_consultas extends Bd {
                 $opc = 2;
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
-                $contRes = mysql_query($sql);
+                $contRes = mysqli_query($this->getConexion(), $sql);
                 while ($fila = mysql_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
@@ -4542,7 +4542,7 @@ class sivisae_consultas extends Bd {
         }
 
         $sql.=" LIMIT 1;";
-        $dataRes = mysql_query($sql);
+        $dataRes = mysqli_query($this->getConexion(), $sql);
         return $dataRes;
     }
 
@@ -4580,7 +4580,7 @@ class sivisae_consultas extends Bd {
 
         $sql.= " ORDER BY tg.`NOMBRES` ASC )AS a ";
         //echo $sql;
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -4622,7 +4622,7 @@ class sivisae_consultas extends Bd {
 
         // echo $sql.' ';
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -4664,7 +4664,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql.' ';
 
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
 
         return $res;
     }
@@ -4702,7 +4702,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql.' ';
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
@@ -4745,7 +4745,7 @@ class sivisae_consultas extends Bd {
 
         // echo $sql.' ';
 
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
 
         return $res;
     }
@@ -4785,7 +4785,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql;
 
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
 
         return $res;
     }
@@ -4832,7 +4832,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql;
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
@@ -4941,7 +4941,7 @@ class sivisae_consultas extends Bd {
         }
 
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         return $resultado;
     }
@@ -4979,7 +4979,7 @@ class sivisae_consultas extends Bd {
 
         //echo $sql.' ';
 
-        $res = mysql_query($sql);
+        $res = mysqli_query($this->getConexion(), $sql);
 
         return $res;
     }
@@ -4998,7 +4998,7 @@ class sivisae_consultas extends Bd {
                 AND z.`zona_id`=c.`zona_zona_id`
                 AND pa.`periodo_academico_id`=m.`periodo_academico_periodo_academico_id`
                 AND e.cedula=$documento";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -5006,13 +5006,13 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT tt.`DOCUMENTO`, CONCAT(tg.`NOMBRES`,' ',tg.`APELLIDOS`) AS NOMBRE, tg.`EMAIL`, tg.`TELEFONO`,  tt.`NOMBRE_PROGRAMA`, tt.`ESCUELA`,tt.`CENTRO`, tt.`ZONA`, tt.`ANIO`
                 FROM SIGRA.`tmp_titulos` tt , SIGRA.`tmp_graduados` tg
                 WHERE tg.`DOCUMENTO`=tt.`DOCUMENTO` AND tt.DOCUMENTO=$documento";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function consultarAspirante($documento) {
         $sql = "SELECT cedula, nombre,programa,centro,telefono,direccion,correo FROM `atencion_aspirante` WHERE cedula=$documento";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -5032,11 +5032,11 @@ class sivisae_consultas extends Bd {
                 FROM `atencion_registro` ar, `usuario` u WHERE ar.`documento`=$documento AND u.`usuario_id`=ar.`usu_log` "
                 . $sql2 . " ORDER BY ar.fecha_atencion DESC LIMIT 5 ";
 
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
 
         $atenciones = "";
         $conteoA = 0;
-        while ($row = mysql_fetch_array($resultado)) {
+        while ($row = mysqli_fetch_array($resultado)) {
             $fecha_atencion = $row[0];
             $cat = $row[1];
             $atendido_por = $row[2];
@@ -5046,8 +5046,8 @@ class sivisae_consultas extends Bd {
 
             //CONSULTAR LAS CATEGORIAS
             $sqlC = "SELECT `descripcion` FROM `atencion_categorias` WHERE `id_categoria` IN ($cat)";
-            $resultadoC = mysql_query($sqlC);
-            while ($row = mysql_fetch_array($resultadoC)) {
+            $resultadoC = mysqli_query($sqlC);
+            while ($row = mysqli_fetch_array($resultadoC)) {
                 $categorias.="-" . $row[0] . " ";
             }
             $atenciones.= '<tr>
@@ -5070,9 +5070,9 @@ class sivisae_consultas extends Bd {
 
     function registraAspirante($nombre, $correo, $programa_at, $centro_at, $telefono, $direccion, $cedula_at, $usuario_log) {
         $sql = "select count(cedula) as conteo from atencion_aspirante where cedula=$cedula_at";
-        $result = mysql_query($sql) or die(mysql_error() . $sql);
+        $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         $con = 0;
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $con = $row[0];
         }
 
@@ -5083,7 +5083,7 @@ class sivisae_consultas extends Bd {
             $sql = "UPDATE `atencion_aspirante` SET `nombre`='$nombre', `programa`=$programa_at,`centro`=$centro_at,`telefono`='$telefono',`direccion`='$direccion', `correo`='$correo', usu_log=$usuario_log, fecha_log=CURRENT_TIMESTAMP WHERE cedula=$cedula_at";
         }
 
-        $result = mysql_query($sql) or die(mysql_error() . $sql);
+        $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $result;
     }
 
@@ -5100,7 +5100,7 @@ class sivisae_consultas extends Bd {
         $sql = "INSERT INTO `atencion_registro` (`documento`,`categorias`,`tipo_atencion`,`fecha_atencion`, usu_log, eje_atencion, observacion)
                 VALUES ($cedula_at,'$cat_atencion', '$atencion_b', CURRENT_TIMESTAMP, $usuario_log, $eje_atencion, '$observacion')";
         //echo $sql;
-        $result = mysql_query($sql) or die(mysql_error() . $sql);
+        $result = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()) . $sql);
         return $result;
     }
 
@@ -6353,7 +6353,7 @@ class sivisae_consultas extends Bd {
 
     function conteoTitulos() {
         $sql = "SELECT COUNT(`DOCUMENTO`) AS conteo_titulos FROM SIGRA.`tmp_titulos`; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo_titulos'];
@@ -6363,7 +6363,7 @@ class sivisae_consultas extends Bd {
 
     function conteoPersonas() {
         $sql = "SELECT COUNT(`DOCUMENTO`) AS conteo_personas FROM SIGRA.`tmp_graduados`; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo_personas'];
@@ -6374,7 +6374,7 @@ class sivisae_consultas extends Bd {
 
     function conteoTelefonos() {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_tel FROM SIGRA.`tmp_graduados` WHERE `TELEFONO`<>0; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo_tel'];
@@ -6385,7 +6385,7 @@ class sivisae_consultas extends Bd {
 
     function conteoDireccion() {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_dir FROM SIGRA.`tmp_graduados` WHERE `DIRECCION`<>'SIN DATO'; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo_dir'];
@@ -6396,7 +6396,7 @@ class sivisae_consultas extends Bd {
 
     function conteoEmail() {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_email FROM SIGRA.`tmp_graduados` WHERE `EMAIL`<>'SIN DATO'; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
         while ($fila = mysql_fetch_assoc($resultado)) {
             $res = $fila['conteo_email'];
@@ -6409,43 +6409,43 @@ class sivisae_consultas extends Bd {
 
     function RelacionPrograma() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `RELACION_PROGRAMA_TRABAJO` AS label FROM SIGRA.`tmp_graduados` GROUP BY `RELACION_PROGRAMA_TRABAJO` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function CargoEgresados() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `CARGO` AS label FROM SIGRA.`tmp_graduados` GROUP BY `CARGO` ORDER BY numerico DESC LIMIT 10 ; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function SituacionLaboral() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `SITUACION_LABORAL` AS label FROM SIGRA.`tmp_graduados` GROUP BY `SITUACION_LABORAL` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function Genero() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `GENERO` AS label FROM SIGRA.`tmp_graduados` GROUP BY `GENERO` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function Estrato() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, CONCAT('Estrato: ',`ESTRATO`) AS label FROM SIGRA.`tmp_graduados` GROUP BY `ESTRATO` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function AreaGeografica() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `AREA_GEOFRAFICA` AS label FROM SIGRA.`tmp_graduados` GROUP BY `AREA_GEOFRAFICA` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
     function Vigencia() {
         $sql = "SELECT COUNT(DOCUMENTO) AS numerico, `ESTADO_IDENTIFICACION` AS label FROM SIGRA.`tmp_graduados` GROUP BY `ESTADO_IDENTIFICACION` ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6455,7 +6455,7 @@ class sivisae_consultas extends Bd {
                 GROUP BY `NOMBRE_PROGRAMA`
                 ORDER BY numerico DESC
                 LIMIT 10; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6470,7 +6470,7 @@ class sivisae_consultas extends Bd {
                                     FROM SIGRA.`tmp_titulos` 
                                     GROUP BY `ESCUELA`
                                     ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6480,7 +6480,7 @@ class sivisae_consultas extends Bd {
                 GROUP BY `CENTRO`
                 ORDER BY numerico DESC
                 LIMIT 15; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6496,7 +6496,7 @@ class sivisae_consultas extends Bd {
                 FROM SIGRA.`tmp_titulos` 
                 GROUP BY `ZONA`
                 ORDER BY numerico DESC; ";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6505,7 +6505,7 @@ class sivisae_consultas extends Bd {
                 FROM SIGRA.`tmp_titulos` 
                 GROUP BY `NIVEL_ACADEMICO`
                 ORDER BY numerico DESC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
@@ -6514,7 +6514,7 @@ class sivisae_consultas extends Bd {
                 FROM SIGRA.`tmp_titulos` 
                 GROUP BY `NIVEL_DE_FORMACION`
                 ORDER BY numerico DESC;";
-        $resultado = mysql_query($sql);
+        $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 

@@ -72,7 +72,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
         $usuarioid = $_SESSION['usuarioid'];
         $menu = $consulta->menu($usuarioid);
         $not = $consulta->getCantNotificaciones($usuarioid);
-        while ($row = mysql_fetch_array($menu)) {
+        while ($row = mysqli_fetch_array($menu)) {
             $menuid = $row[0];
             $descripcion = $row[1];
             $dashboard = $row[2];
@@ -80,7 +80,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
             echo "<li class='has-sub' ><a href='$dashboard'><span>$descripcion</span></a>"
             . "<ul>";
             $opciones = $consulta->opciones($usuarioid, $menuid);
-            while ($row1 = mysql_fetch_array($opciones)) {
+            while ($row1 = mysqli_fetch_array($opciones)) {
                 $opcion = $row1[0];
                 $url = $row1[1];
                 $id_opcion = $row1[2];
@@ -138,7 +138,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
             //Eventos del calendario
             $contE = 0;
 
-            while ($rowEC = mysql_fetch_array($eventosCalendario)) {
+            while ($rowEC = mysqli_fetch_array($eventosCalendario)) {
                 ?><h2 id='p_calendario_11'><?php echo $rowEC[1]; ?></h2><?php
                 ?><h2 id='p_calendario_2'><?php echo $rowEC[2]; ?></h2><?php
                 $contE++;
@@ -162,7 +162,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
             $cumpleañosCalendario = $consulta->traerCumpeañosCalendario();
             //Eventos del calendario
             $contC = 0;
-            while ($rowCC = mysql_fetch_array($cumpleañosCalendario)) {
+            while ($rowCC = mysqli_fetch_array($cumpleañosCalendario)) {
                 $contC++;
                 if ($contC == 1) {
                     ?><h2 id='p_calendario_13'>En este día a...</h2><?php
@@ -206,7 +206,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5') {
                                         <option value=''></option>
                                         <?php
                                         $funcionarios = $consulta->funcionarios($usuarioid);
-                                        while ($row1 = mysql_fetch_array($funcionarios)) {
+                                        while ($row1 = mysqli_fetch_array($funcionarios)) {
                                             $aud_id = $row1[0];
                                             $aud_nombre = ucwords($row1[1]);
                                             $gen = $row1[2];

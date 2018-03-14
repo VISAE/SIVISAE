@@ -29,7 +29,7 @@ $resEvento = $consulta->consultarEventos();
                             events: [";
         $cont = 0;
         $script2 = '';
-        while ($fila = mysql_fetch_array($resEvento)) {
+        while ($fila = mysqli_fetch_array($resEvento)) {
             if ($cont != 0) {
                 $script2 = $script2 . ' , ';
             }

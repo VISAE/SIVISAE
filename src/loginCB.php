@@ -19,7 +19,7 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
         echo 'NO PASA';
     } else {
         $codigo = null;
-        while ($fila = mysql_fetch_array($resMS)) {
+        while ($fila = mysqli_fetch_array($resMS)) {
             $codigo = $fila[0];
             if ($codigo == 1) {
                 $_SESSION["usuarioid"] = $fila[1];

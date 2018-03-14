@@ -32,6 +32,8 @@ class Bd {
         for ($i = 0; $i < (count($array) - 1); $i++) {
             $array[$i] = $this->decrypt($array[$i], $this->getKey());
         }
+        $array[0] = 'localhost';
+        $array[3] = 'Febrero2018*';
         return $array;
     }
 
@@ -149,24 +151,24 @@ class Bd {
     }
 
     private function conectarBD($servidor) {
-        if (!$this->conexion = mysql_connect($servidor, $this->usuario, $this->clave)) {
+        if (!$this->conexion = mysqli_connect($servidor, $this->usuario, $this->clave, $this->bd)) {
             echo "Error al conectar con el servidor";
-            echo mysql_error($this->conexion);
+            echo mysqli_error($this->conexion);
         } else {
-            mysql_set_charset('utf8', $this->conexion);
-            if (!mysql_select_db($this->bd, $this->conexion)) {
+            mysqli_set_charset($this->conexion, 'utf8');
+            if (!mysqli_select_db($this->conexion, $this->bd)) {
                 echo "Error conectando con la base de datos";
             }
         }
     }
     
     private function conectarBD2($servidor) {
-        if (!$this->conexion2 = mysqli_connect($servidor, $this->usuario, $this->clave)) {
+        if (!$this->conexion2 = mysqli_connect($servidor, $this->usuario, $this->clave, $this->bd)) {
             echo "Error al conectar con el servidor";
-            echo mysql_error($this->conexion);
+            echo mysqli_error($this->conexion);
         } else {
-            mysql_set_charset('utf8', $this->conexion);
-            if (!mysql_select_db($this->bd, $this->conexion)) {
+            mysqli_set_charset($this->conexion, 'utf8');
+            if (!mysqli_select_db($this->conexion, $this->bd)) {
                 echo "Error conectando con la base de datos";
             }
         }
@@ -181,11 +183,11 @@ class Bd {
     }
 
     public function destruir() {
-        mysql_close($this->getConexion());
+        mysqli_close($this->getConexion());
     }
     
     public function destruir2() {
-        mysql_close($this->getConexion2());
+        mysqli_close($this->getConexion2());
     }
 
     public function encrypt($string, $key) {
