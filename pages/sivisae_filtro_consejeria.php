@@ -6,7 +6,7 @@ if (isset($pf) && $pf !== '5' && $pf !== '9') {
             <option value=''></option>
             <?php
             $auditor_c = $consulta->consejeros();
-            while ($row1 = mysql_fetch_array($auditor_c)) {
+            while ($row1 = mysqli_fetch_array($auditor_c)) {
                 $aud_id = $row1[0];
                 $aud_nombre = ucwords(strtolower($row1[1]));
                 $gen = ucwords(strtolower($row1[2]));
@@ -19,7 +19,7 @@ if (isset($pf) && $pf !== '5' && $pf !== '9') {
     </td>
     <?php
 } else if ($pf === '5') {
-    $auditor = mysql_fetch_array($consulta->traerConsejero(null, $_SESSION['usuarioid']));
+    $auditor = mysqli_fetch_array($consulta->traerConsejero(null, $_SESSION['usuarioid']));
     $aud_id = $auditor[0];
     $aud_nombre = $auditor[1];
     ?>

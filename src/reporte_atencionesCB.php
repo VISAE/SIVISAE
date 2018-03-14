@@ -25,13 +25,14 @@ $seleccionados = array();
 $atenciones = $consulta->ReporteAtenciones($auditor, 1, $_SESSION["perfilid"], $_SESSION["modulo"]);
 $cont_a = 0;
 
-while ($rowC = mysql_fetch_array($atenciones)) {
+while ($rowC = mysqli_fetch_array($atenciones)) {
+    print_r($_POST["buscar"]);
     if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
         $datosC = $consulta->ConteoDatosReporteAtenciones($rowC[0], $_POST["buscar"], $zona, $cead, $escuela, $programa, $f_inicial, $f_final);
     } else {
         $datosC = $consulta->ConteoDatosReporteAtenciones($rowC[0], 'n', $zona, $cead, $escuela, $programa, $f_inicial, $f_final);
     }
-    while ($rowDataC = mysql_fetch_array($datosC)) {
+    while ($rowDataC = mysqli_fetch_array($datosC)) {
         $cont_a++;
     }
 }
@@ -41,7 +42,7 @@ $atenciones2 = $consulta->ReporteAtenciones($auditor, 2, $_SESSION["perfilid"], 
 // lista de categorias
 $catList = array();
 $categorias = $consulta->categoriasAtencion($_SESSION["modulo"]);
-while ($fila = mysql_fetch_array($categorias)) {
+while ($fila = mysqli_fetch_array($categorias)) {
     $catList[] = $fila;
 }
 
@@ -77,11 +78,11 @@ $result.= "
                     ";
 $cont = 0;
 $catAtendidas = "";
-while ($row = mysql_fetch_array($atenciones2)) {
+while ($row = mysqli_fetch_array($atenciones2)) {
     $id = $row[0];
     //Se muestra reporte de los atendidos
     $datos = $consulta->DatosReporteAtenciones($id, $_POST["buscar"], $zona, $cead, $escuela, $programa, $f_inicial, $f_final);
-    while ($rowData = mysql_fetch_array($datos)) {
+    while ($rowData = mysqli_fetch_array($datos)) {
 
         if ($cont < 100) {
             //Se hace el conteo de categorias 

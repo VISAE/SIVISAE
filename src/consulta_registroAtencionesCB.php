@@ -87,7 +87,7 @@ if (isset($_POST['documento'])) {
     $conteoG = 0;
 
     //Se precargan datos
-    while ($row = mysql_fetch_array($datosEstudiante)) {
+    while ($row = mysqli_fetch_array($datosEstudiante)) {
         $cedula = $row[0];
         $nombre = $row[1];
         $correo = $row[2];
@@ -100,7 +100,7 @@ if (isset($_POST['documento'])) {
     }
 
     $titulos = "";
-    while ($row = mysql_fetch_array($datosGraduado)) {
+    while ($row = mysqli_fetch_array($datosGraduado)) {
         if ($conteoE <= 0) {
             $cedula = $row[0];
             $nombre = $row[1];
@@ -128,7 +128,7 @@ if (isset($_POST['documento'])) {
 
     if ($conteoE <= 0 && $conteoG <= 0) {
         $datosAspirante = $consulta->consultarAspirante($documento);
-        while ($row = mysql_fetch_array($datosAspirante)) {
+        while ($row = mysqli_fetch_array($datosAspirante)) {
             $cedula = $row[0];
             $nombre = $row[1];
             $programa = $row[2];
@@ -159,7 +159,7 @@ if (isset($_POST['documento'])) {
                                             <td>
                                                 <select id="programa_at" name="programa_at[]" data-placeholder="Seleccione un programa" class="chosen-select-deselect" style="width:180px;" tabindex="4">
                                                     <option value=""></option>';
-        while ($row = mysql_fetch_array($programaLista)) {
+        while ($row = mysqli_fetch_array($programaLista)) {
             if ($row[0] == $programa) {
                 echo '<option selected value="' . $row[0] . '">' .
                 $row[1] . " - " . ucwords($row[2]) .
@@ -178,7 +178,7 @@ if (isset($_POST['documento'])) {
                                 <td>
                                                 <select id="centro_at" name="centro_at[]" data-placeholder="Seleccione un centro" class="chosen-select-deselect"  style="width:180px;" tabindex="4">
                                                     <option value=""></option>';
-        while ($row = mysql_fetch_array($ceadLista)) {
+        while ($row = mysqli_fetch_array($ceadLista)) {
             if ($row[0] == $cead) {
                 echo '<option selected value="' . $row[0] . '">' .
                 $row[1] . " - " . ucwords($row[2]) .
@@ -301,7 +301,7 @@ if (isset($_POST['documento'])) {
                                             <td>
                                                 <select id="cat_atencion" name="cat_atencion[]" data-placeholder="Seleccione una categoria"   class="chosen-select" multiple style="width:380px;" tabindex="4">
                                                     <option value=""></option>';
-    while ($row = mysql_fetch_array($categorias)) {
+    while ($row = mysqli_fetch_array($categorias)) {
         echo '<option value="' . $row[0] . '">' .
         ucwords($row[1]) .
         '</option>';

@@ -72,7 +72,8 @@ if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
     $auditores = $consulta->ReporteMatriculados('n', $periodo, $zona, $cead, $escuela, $programa, $page_position, $item_per_page);
 }
 
-if (count($auditores) <= 0) {
+//if (count($auditores) <= 0) {
+if ($auditores->num_rows <= 0) {
     echo 'No existen resultados para esta consulta';
 } else {
 
@@ -101,7 +102,7 @@ if (count($auditores) <= 0) {
 				</thead>
                         <tbody>
                     ";
-    while ($row = mysql_fetch_array($auditores)) {
+    while ($row = mysqli_fetch_array($auditores)) {
         if ($row[10] == 'H') {
             if ($row[11] == 1) {
                 $tipo = 'HOMOLOGACIÓN';

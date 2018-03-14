@@ -59,7 +59,8 @@ if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
     $inducciones = $consulta->ReporteInducciones('n', $periodo, $zona, $cead, $escuela, $programa, $page_position, $item_per_page);
 }
 
-if (count($inducciones) <= 0) {
+//if (count($inducciones) <= 0) {
+if ($inducciones->num_rows <= 0) {
     echo 'No existen resultados para esta consulta';
 } else {
 
@@ -91,7 +92,7 @@ if (count($inducciones) <= 0) {
 				</thead>
                         <tbody>
                     ";
-    while ($row = mysql_fetch_array($inducciones)) {
+    while ($row = mysqli_fetch_array($inducciones)) {
         if ($row[10] == 'H') {
             if ($row[11] == 1) {
                 $tipo = 'HOMOLOGACIÓN';

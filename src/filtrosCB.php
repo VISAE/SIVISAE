@@ -5,7 +5,7 @@ $consulta = new sivisae_consultas();
 
 if (isset($_POST['select'])) {
     $permisos_filtro = $consulta->filtro_variables($_SESSION['modulo'], $_SESSION['perfilid']);
-    while ($row = mysql_fetch_array($permisos_filtro)) {
+    while ($row = mysqli_fetch_array($permisos_filtro)) {
         $filtro_escuelas = $row[0];
         $filtro_zonas = $row[1];
     }
@@ -28,7 +28,7 @@ if (isset($_POST['select'])) {
         echo "Programa:
             <select id='programa' name='programa[]' data-placeholder='Seleccione un Programa' class='chosen-select' multiple style='width:180px;' tabindex='4'>";
     }
-    while ($row = mysql_fetch_array($opcion)) {
+    while ($row = mysqli_fetch_array($opcion)) {
         echo '<option value="' . $row[0] . '">' .
         $row[1] . ' - ' . ucwords($row[2]) .
         '</option>';

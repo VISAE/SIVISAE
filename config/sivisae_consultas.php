@@ -3162,7 +3162,7 @@ class sivisae_consultas extends Bd {
         $sql = "select count(*) as conteo from SIVISAE.eliminacion_seguimientos where `seguimiento_id`=$id_seguimiento";
         $resultado = mysqli_query($this->getConexion(), $sql) or die(mysqli_error($this->getConexion()));
 
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $solicitud = $fila['conteo'];
         }
 
@@ -3211,7 +3211,7 @@ class sivisae_consultas extends Bd {
 
         $resultado = mysqli_query($this->getConexion(), $sql);
 
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
 
@@ -3433,7 +3433,7 @@ class sivisae_consultas extends Bd {
       GROUP BY ae.`auditor_auditor_id`;";
       $resultado = mysqli_query($this->getConexion(), $sql);
 
-      while ($fila = mysql_fetch_assoc($resultado)) {
+      while ($fila = mysqli_fetch_assoc($resultado)) {
       $arreglo[] = array(
       'id_auditor' => $fila['id_auditor'],
       'induccion' => $fila['induccion']
@@ -3948,7 +3948,7 @@ class sivisae_consultas extends Bd {
 
         $resultado = mysqli_query($this->getConexion(), $sql);
 
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
 
@@ -4190,7 +4190,7 @@ class sivisae_consultas extends Bd {
         //echo $query;
         $resultado = mysqli_query($query);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
         return $res;
@@ -4278,7 +4278,7 @@ class sivisae_consultas extends Bd {
 
 
         //echo ($query);
-        $resultado = mysqli_query($query);
+        $resultado = mysqli_query($this->getConexion(), $query);
         return $resultado;
     }
 
@@ -4287,7 +4287,7 @@ class sivisae_consultas extends Bd {
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
         $contRes = mysqli_query($this->getConexion(), $sql);
-        while ($fila = mysql_fetch_assoc($contRes)) {
+        while ($fila = mysqli_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
         if ($res > 0) {
@@ -4299,7 +4299,7 @@ class sivisae_consultas extends Bd {
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
             $contRes = mysqli_query($this->getConexion(), $sql);
-            while ($fila = mysql_fetch_assoc($contRes)) {
+            while ($fila = mysqli_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
             if ($res > 0) {
@@ -4311,7 +4311,7 @@ class sivisae_consultas extends Bd {
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
                 $contRes = mysqli_query($this->getConexion(), $sql);
-                while ($fila = mysql_fetch_assoc($contRes)) {
+                while ($fila = mysqli_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
                 if ($res > 0) {
@@ -4368,7 +4368,7 @@ class sivisae_consultas extends Bd {
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
         $contRes = mysqli_query($this->getConexion(), $sql);
-        while ($fila = mysql_fetch_assoc($contRes)) {
+        while ($fila = mysqli_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
         if ($res > 0) {
@@ -4383,7 +4383,7 @@ class sivisae_consultas extends Bd {
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
             $contRes = mysqli_query($this->getConexion(), $sql);
-            while ($fila = mysql_fetch_assoc($contRes)) {
+            while ($fila = mysqli_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
             if ($res > 0) {
@@ -4398,7 +4398,7 @@ class sivisae_consultas extends Bd {
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
                 $contRes = mysqli_query($this->getConexion(), $sql);
-                while ($fila = mysql_fetch_assoc($contRes)) {
+                while ($fila = mysqli_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
                 if ($res > 0) {
@@ -4459,7 +4459,7 @@ class sivisae_consultas extends Bd {
         //Se consulta como estudiante
         $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, estudiante e, matricula m, `programa` p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND e.`cedula`=ar.`documento` AND m.`estudiante_estudiante_id`=e.`estudiante_id` AND p.`programa_id`=m.`programa_programa_id` AND e.`cead_cead_id`=c.`cead_id` AND c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1";
         $contRes = mysqli_query($this->getConexion(), $sql);
-        while ($fila = mysql_fetch_assoc($contRes)) {
+        while ($fila = mysqli_fetch_assoc($contRes)) {
             $res = $fila['conteo'];
         }
         if ($res > 0) {
@@ -4476,7 +4476,7 @@ class sivisae_consultas extends Bd {
         } else {//Se consulta como graduado
             $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, SIGRA.`tmp_graduados` stg, SIGRA.`tmp_titulos` stt, programa p, cead c, usuario u WHERE  ar.`id_Atencion`=$id AND stg.DOCUMENTO=ar.`documento` AND ar.`documento`=stt.`DOCUMENTO` AND stt.`CODIGO_PROGRAMA`=p.`programa_id` AND stt.`CODIGO_CENTRO`=c.`codigo` AND u.`usuario_id`=ar.usu_log  LIMIT 1;";
             $contRes = mysqli_query($this->getConexion(), $sql);
-            while ($fila = mysql_fetch_assoc($contRes)) {
+            while ($fila = mysqli_fetch_assoc($contRes)) {
                 $res = $fila['conteo'];
             }
             if ($res > 0) {
@@ -4491,7 +4491,7 @@ class sivisae_consultas extends Bd {
             } else {//Se consulta como aspirante
                 $sql = "SELECT COUNT(ar.`documento`) AS conteo FROM `atencion_registro` ar, `atencion_aspirante` aa, programa p, cead c, zona z, usuario u WHERE ar.`id_Atencion`=$id AND ar.`documento`=aa.`cedula` AND p.`programa_id`=aa.`programa` AND c.`cead_id`=aa.`centro` AND  c.`zona_zona_id`=z.`zona_id` AND u.`usuario_id`=ar.usu_log LIMIT 1;";
                 $contRes = mysqli_query($this->getConexion(), $sql);
-                while ($fila = mysql_fetch_assoc($contRes)) {
+                while ($fila = mysqli_fetch_assoc($contRes)) {
                     $res = $fila['conteo'];
                 }
                 if ($res > 0) {
@@ -4582,7 +4582,7 @@ class sivisae_consultas extends Bd {
         //echo $sql;
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
 
@@ -4624,7 +4624,7 @@ class sivisae_consultas extends Bd {
 
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
 
@@ -4704,7 +4704,7 @@ class sivisae_consultas extends Bd {
 
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo'];
         }
 
@@ -6355,7 +6355,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT COUNT(`DOCUMENTO`) AS conteo_titulos FROM SIGRA.`tmp_titulos`; ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo_titulos'];
         }
         return $res;
@@ -6365,7 +6365,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT COUNT(`DOCUMENTO`) AS conteo_personas FROM SIGRA.`tmp_graduados`; ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo_personas'];
         }
 
@@ -6376,7 +6376,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_tel FROM SIGRA.`tmp_graduados` WHERE `TELEFONO`<>0; ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo_tel'];
         }
 
@@ -6387,7 +6387,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_dir FROM SIGRA.`tmp_graduados` WHERE `DIRECCION`<>'SIN DATO'; ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo_dir'];
         }
 
@@ -6398,7 +6398,7 @@ class sivisae_consultas extends Bd {
         $sql = "SELECT COUNT(DOCUMENTO) AS conteo_email FROM SIGRA.`tmp_graduados` WHERE `EMAIL`<>'SIN DATO'; ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         $res = 0;
-        while ($fila = mysql_fetch_assoc($resultado)) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
             $res = $fila['conteo_email'];
         }
 
@@ -6525,7 +6525,7 @@ class sivisae_consultas extends Bd {
         $dataSet_l = "";
         $dataSet_c = "";
         $cont = 0;
-        while ($fila = mysql_fetch_assoc($data)) {
+        while ($fila = mysqli_fetch_assoc($data)) {
             // Sacar cantidad
 
             if ($cont > 0) {

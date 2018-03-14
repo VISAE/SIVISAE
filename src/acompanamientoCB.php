@@ -49,9 +49,9 @@ if (isset($_SESSION['ced'])) {
 //Obtiene la cantidad total de registros desde BD para crear la paginacion
     $cantEst;
     if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
-        $cantEst = mysql_fetch_array($consulta->filtrarCantEstudiantesAsignados2Consejeria($auditor, $_POST["buscar"], $periodo, $escuela, $programa, $fecha_ini, $fecha_fin, $tipo_asignacion));
+        $cantEst = mysqli_fetch_array($consulta->filtrarCantEstudiantesAsignados2Consejeria($auditor, $_POST["buscar"], $periodo, $escuela, $programa, $fecha_ini, $fecha_fin, $tipo_asignacion));
     } else {
-        $cantEst = mysql_fetch_array($consulta->cantEstudiantesAsignados2Consejeria($auditor, $periodo, $escuela, $programa, $fecha_ini, $fecha_fin, $tipo_asignacion));
+        $cantEst = mysqli_fetch_array($consulta->cantEstudiantesAsignados2Consejeria($auditor, $periodo, $escuela, $programa, $fecha_ini, $fecha_fin, $tipo_asignacion));
     }
     $get_total_rows = $cantEst[0];
 
@@ -73,7 +73,8 @@ if (isset($_SESSION['ced'])) {
         $estudiantes = $consulta->estudiantesAsignados2Consejeria($auditor, $page_position, $item_per_page, $periodo, $escuela, $programa, $fecha_ini, $fecha_fin, $tipo_asignacion);
     }
     
-    if (count($estudiantes) <= 0) {
+//    if (count($estudiantes) <= 0) {
+    if ($estudiantes->num_rows <= 0) {
         echo 'Este consejero no tiene estudiantes asignados';
     } else {
 
@@ -219,7 +220,7 @@ var id = $(this).attr('est');
         $completo = "class='completo'>";
         $incompleto = "class='incompleto'>";
         $notiene = "class='no-tiene'>";
-        while ($row = mysql_fetch_array($estudiantes)) {
+        while ($row = mysqli_fetch_array($estudiantes)) {
             $id = $row[0];
             $cedula = ucfirst(strtolower($row[1]));
             $nombre = ucwords(strtolower($row[2]));
@@ -319,7 +320,7 @@ var id = $(this).attr('est');
                 $inducciones = $consulta->induccionesRealizadas($id);
                 echo "<div id='induccion-$id' style='display:none'>";
                 $cont = 1;
-                while ($row1 = mysql_fetch_array($inducciones)) {
+                while ($row1 = mysqli_fetch_array($inducciones)) {
                     echo "$cont - Tipo: <b>$row1[0]</b><br>"
                     . "&nbsp&nbsp&nbsp&nbsp&nbsp Fecha: <b>$row1[1]</b><br>";
                     $cont = $cont + 1;
@@ -332,7 +333,7 @@ var id = $(this).attr('est');
                 echo "<div id='seguimiento-$id' style='display:none'>";
                 $cont = 1;
                 $contador_iteraciones = 0;
-                while ($row1 = mysql_fetch_array($seguimientos)) {
+                while ($row1 = mysqli_fetch_array($seguimientos)) {
                     $seg_id = base64_encode($row1[0]);
                     $cierre = ($row1[3] <> '') ? $row1[3] : "Sin cerrar";
                     $actualizacion = ($row1[3] <> '') ? $row1[3] : $row1[2];
@@ -346,7 +347,7 @@ var id = $(this).attr('est');
                     $cursos = $consulta->materiasEstByPeriodo($est_id, $periodo, $row1[0], 2);
                     echo "<br><b>Listado de Cursos - Seg. $cont </b><br><br>";
 
-                    while ($row = mysql_fetch_array($cursos)) {
+                    while ($row = mysqli_fetch_array($cursos)) {
                         $mat_id = $row[0];
                         $mat = ucwords(preg_replace($sintilde, $tildes, $row[1]));
                         $segto_id = $seg_id != 'n' ? $row[3] : 'n';

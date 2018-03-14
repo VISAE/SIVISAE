@@ -5,7 +5,7 @@ $consulta = new sivisae_consultas();
 
 $periodos = $consulta->periodos();
 $permisos_filtro = $consulta->filtro_variables($_SESSION['modulo'], $_SESSION['perfilid']);
-while ($row = mysql_fetch_array($permisos_filtro)) {
+while ($row = mysqli_fetch_array($permisos_filtro)) {
     $filtro_escuelas = $row[0];
     $filtro_zonas = $row[1];
 }
@@ -488,7 +488,7 @@ $programa = $consulta->programaSegunEscuela("T", $filtro_escuelas, $_SESSION["pr
                                                             <option value=''></option>
                                                             <?php
                                                             $auditor_c = $consulta->consejeros();
-                                                            while ($row1 = mysql_fetch_array($auditor_c)) {
+                                                            while ($row1 = mysqli_fetch_array($auditor_c)) {
                                                                 $aud_id = $row1[0];
                                                                 $aud_nombre = ucwords(strtolower($row1[1]));
                                                                 $gen = ucwords(strtolower($row1[2]));

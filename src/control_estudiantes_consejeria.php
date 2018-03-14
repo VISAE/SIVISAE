@@ -36,9 +36,9 @@ $item_per_page = $registros;
 //Obtiene la cantidad total de registros desde BD para crear la paginacion
 $cantEst;
 if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
-    $cantEst = mysql_fetch_array($consulta->filtroCantEstudiantesNoAsignadosConsejeria($auditor, $_POST["buscar"], $periodo, $cead, $zona, $escuela, $programa));
+    $cantEst = mysqli_fetch_array($consulta->filtroCantEstudiantesNoAsignadosConsejeria($auditor, $_POST["buscar"], $periodo, $cead, $zona, $escuela, $programa));
 } else {
-    $cantEst = mysql_fetch_array($consulta->cantEstudiantesNoAsignadosConsejeria($auditor, $periodo, $cead, $zona, $escuela, $programa));
+    $cantEst = mysqli_fetch_array($consulta->cantEstudiantesNoAsignadosConsejeria($auditor, $periodo, $cead, $zona, $escuela, $programa));
 }
 $get_total_rows = $cantEst[0];
 
@@ -65,7 +65,8 @@ if (isset($_POST["buscar"]) && $_POST["buscar"] != '') {
     //echo '2';
     $estudiantes = $consulta->estudiantesNoAsignadosConsejeria($auditor, $page_position, $item_per_page, $periodo, $cead, $zona, $escuela, $programa);
 }
-if (count($estudiantes) <= 0) {
+//if (count($estudiantes) <= 0) {
+if ($estudiantes->num_rows <= 0) {
     echo 'Este auditor no tiene estudiantes asignados';
 } else {
 
@@ -116,7 +117,7 @@ if (count($estudiantes) <= 0) {
         $seleccionados = $_POST['selec_est'];
 //    echo implode(", ", $seleccionados);
     }
-    while ($row = mysql_fetch_array($estudiantes)) {
+    while ($row = mysqli_fetch_array($estudiantes)) {
         $id = $row[0];
         $cedula = ucfirst(strtolower($row[1]));
         $nombre = ucwords(strtolower($row[2]));

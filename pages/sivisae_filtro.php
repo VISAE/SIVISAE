@@ -14,7 +14,7 @@ $_SESSION['modulo'] = $modulo;
 
 // Filtros de permisos 
 $permisos_filtro = $consulta->filtro_variables($modulo, $pf);
-while ($row = mysql_fetch_array($permisos_filtro)) {
+while ($row = mysqli_fetch_array($permisos_filtro)) {
     $filtro_escuelas = $row[0];
     $filtro_zonas = $row[1];
 }
@@ -75,7 +75,7 @@ $programa = $consulta->filtro_programas($filtro_escuelas, $_SESSION["programa_us
                 <select id="periodo" name="periodo" data-placeholder="Seleccione un periodo" class="chosen-select-deselect" style="width:180px;" tabindex="4">
                     <option value=""></option>
                     <?php
-                    while ($row = mysql_fetch_array($periodos)) {
+                    while ($row = mysqli_fetch_array($periodos)) {
                         echo "<option value='$row[0]'>" .
                         utf8_encode(ucwords($row[1])) .
                         "</option>";
@@ -89,7 +89,7 @@ $programa = $consulta->filtro_programas($filtro_escuelas, $_SESSION["programa_us
             <select id="zona" name="zona[]" data-placeholder="Seleccione una Zona" class="chosen-select" multiple style="width:180px;" tabindex="4">
                 <option value=""></option>
                 <?php
-                while ($row = mysql_fetch_array($zonas)) {
+                while ($row = mysqli_fetch_array($zonas)) {
                     echo "<option value='$row[0]'>" .
                     ucwords($row[1]) .
                     "</option>";
@@ -107,7 +107,7 @@ $programa = $consulta->filtro_programas($filtro_escuelas, $_SESSION["programa_us
                         <option value="T">Todos</option>
                         <?php
                     }
-                    while ($row = mysql_fetch_array($cead)) {
+                    while ($row = mysqli_fetch_array($cead)) {
                         echo "<option value='$row[0]'>" .
                         $row[1] . " - " . ucwords($row[2]) .
                         "</option>";
@@ -121,7 +121,7 @@ $programa = $consulta->filtro_programas($filtro_escuelas, $_SESSION["programa_us
             <select id="escuela" name="escuela[]" data-placeholder="Seleccione una Escuela"   class="chosen-select" multiple style="width:180px;" tabindex="4">
                 <option value=""></option>
                 <?php
-                while ($row = mysql_fetch_array($escuelas)) {
+                while ($row = mysqli_fetch_array($escuelas)) {
                     echo "<option value='$row[0]'>" .
                     ucwords($row[0]) .
                     "</option>";
@@ -134,7 +134,7 @@ $programa = $consulta->filtro_programas($filtro_escuelas, $_SESSION["programa_us
             <select id="programa" name="programa[]" data-placeholder="Seleccione un Programa" class="chosen-select" multiple style="width:180px;" tabindex="4">
                 <option value=""></option>
                 <?php
-                while ($row = mysql_fetch_array($programa)) {
+                while ($row = mysqli_fetch_array($programa)) {
                     echo "<option value='$row[0]'>" .
                     $row[1] . " - " . ucwords($row[2]) .
                     "</option>";
