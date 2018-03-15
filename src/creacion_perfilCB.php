@@ -112,7 +112,7 @@ if (isset($_POST['accion_e']) && $_POST['accion_e'] == 'e') {
         $opc_compare = array();
 //        $opc_compare = array('1','2','3','5','6','8','9');
         $val = $consulta->existePerfilOpcion($id_perfil);
-        while ($row = mysql_fetch_array($val)) {
+        while ($row = mysqli_fetch_array($val)) {
             $opc_compare[] = $row[1];
         }
         $delete = array_diff($opc_compare, $_POST['opcion_e']);

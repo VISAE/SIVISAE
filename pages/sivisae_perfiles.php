@@ -31,7 +31,7 @@ $consulta = new sivisae_consultas();
                 $edit = 0;
                 $delete = 0;
                 $permisos = $consulta->permisos($modulo, $_SESSION["perfilid"]);
-                while ($row = mysql_fetch_array($permisos)) {
+                while ($row = mysqli_fetch_array($permisos)) {
                     $copy = $row[0];
                     $edit = $row[1];
                     $delete = $row[2];
@@ -468,7 +468,7 @@ $consulta = new sivisae_consultas();
                                             </tr>
                                             <?php
                                             $result = $consulta->opcionesPerfil();
-                                            while ($row = mysql_fetch_array($result)) {
+                                            while ($row = mysqli_fetch_array($result)) {
                                                 $opid = $row[0];
                                                 $desc = $row[1];
                                                 $url = $row[2];

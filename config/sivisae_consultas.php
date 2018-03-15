@@ -493,14 +493,14 @@ class sivisae_consultas extends Bd {
         $validar = "SELECT perfil_perfil_id, opcion_opcion_id, CONCAT(opcion_crear, ', ', opcion_editar, ', ', opcion_eliminar) AS permisos \n"
                 . "FROM SIVISAE.perfil_opcion \n"
                 . "WHERE perfil_perfil_id = $perfilid ;";
-        $resultado = mysqli_query($validar);
+        $resultado = mysqli_query($this->getConexion(), $validar);
         return $resultado;
     }
 
     function updatePerfilOpcion($perfilid, $opcion, $permisos, $accion, $filtro_zona, $filtro_escuela) {
 
         if ($accion == 'u') {
-            $perm = split(", ", $permisos);
+            $perm = explode(", ", $permisos);
             $sql = "UPDATE SIVISAE.perfil_opcion SET opcion_crear = $perm[0], opcion_editar = $perm[1], opcion_eliminar = $perm[2], filtro_zona =$filtro_zona, filtro_escuela=$filtro_escuela "
                     . " WHERE perfil_perfil_id = $perfilid AND opcion_opcion_id = $opcion;";
         }

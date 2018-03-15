@@ -20,7 +20,7 @@ if ($_POST['accion'] === 'n') {
 
 
 //Obtiene la cantidad total de registros desde BD para crear la paginacion
-    $cantEst = mysql_fetch_array($consulta->cantRegistros("select count(*) from perfil where estado_estado_id in (1,2)"));
+    $cantEst = mysqli_fetch_array($consulta->cantRegistros("select count(*) from perfil where estado_estado_id in (1,2)"));
     $get_total_rows = $cantEst[0];
 
 //Divide la cantidad de registros totales entre la cantidad de registros a mostrar para saber cuantas paginas se crearan
@@ -32,7 +32,8 @@ if ($_POST['accion'] === 'n') {
 //Consulta el listado de usuarios
     $perfiles = $consulta->traerPerfiles($page_position, $item_per_page);
 
-    if (count($perfiles) <= 0) {
+//    if (count($perfiles) <= 0) {
+    if ($perfiles->num_rows <= 0) {
         echo 'No existen perfiles';
     } else {
 
@@ -47,7 +48,7 @@ if ($_POST['accion'] === 'n') {
 				</thead>
                         <tbody>
                     ";
-        while ($row = mysql_fetch_array($perfiles)) {
+        while ($row = mysqli_fetch_array($perfiles)) {
             $id_perfil = $row[0];
             $descripcion_perfil = ucwords(strtolower($row[1]));
             $estado = $row[2];
@@ -100,7 +101,7 @@ if ($_POST['accion'] === 'n') {
                         </td>
                     </tr>';
         $result = $consulta->permisosPerfil($id_perfil);
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $opid = $row[0];
             $desc = $row[1];
             $opc = $row[2];

@@ -19,7 +19,7 @@ $item_per_page = 10;
 
 
 //Obtiene la cantidad total de registros desde BD para crear la paginacion
-$cantEst = mysql_fetch_array($consulta->cantRegistros("select count(*) from usuario where estado_estado_id in (1,2)"));
+$cantEst = mysqli_fetch_array($consulta->cantRegistros("select count(*) from usuario where estado_estado_id in (1,2)"));
 $get_total_rows = $cantEst[0];
 
 //Divide la cantidad de registros totales entre la cantidad de registros a mostrar para saber cuantas paginas se crearan
@@ -31,7 +31,8 @@ $page_position = (($page_number - 1) * $item_per_page);
 //Consulta el listado de usuarios
 $estudiantes = $consulta->traerUsuarios($page_position, $item_per_page);
 
-if (count($estudiantes) <= 0) {
+//if (count($estudiantes) <= 0) {
+if ($estudiantes->num_rows <= 0) {
     echo 'No existen usuarios';
 } else {
 
@@ -54,7 +55,7 @@ if (count($estudiantes) <= 0) {
 				</thead>
                         <tbody>
                     ";
-    while ($row = mysql_fetch_array($estudiantes)) {
+    while ($row = mysqli_fetch_array($estudiantes)) {
         $cedula = $row[0];
         $nombre = ucwords(strtolower($row[1]));
         $fecha_expiracion = $row[2];

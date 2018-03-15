@@ -31,7 +31,7 @@ $consulta = new sivisae_consultas();
                 $edit = 0;
                 $delete = 0;
                 $permisos = $consulta->permisos($modulo, $_SESSION["perfilid"]);
-                while ($row = mysql_fetch_array($permisos)) {
+                while ($row = mysqli_fetch_array($permisos)) {
                     $copy = $row[0];
                     $edit = $row[1];
                     $delete = $row[2];
@@ -461,7 +461,7 @@ $consulta = new sivisae_consultas();
                                                     <?php
                                                     $sbHtML2 = "<select required='required' style='width: 180px;' name='perfil' id='perfil' data-placeholder='Seleccione un perfil...' style='width: 150px' tabindex='2'>";
                                                     $sbHtML2.= "<option value=''></option>";
-                                                    while ($row = mysql_fetch_array($respuesta)) {
+                                                    while ($row = mysqli_fetch_array($respuesta)) {
                                                         $sbHtML2.="<option value=$row[0]>";
                                                         $sbHtML2.= $row[1];
                                                         $sbHtML2.="</option>";
@@ -489,7 +489,7 @@ $consulta = new sivisae_consultas();
                                                     $sbHtML2 = "";
                                                     $sbHtML2 = "<select required='required' style='width: 180px;' name='sede' id='sede' data-placeholder='Seleccione sede.' style='width: 150px' tabindex='2'>";
                                                     $sbHtML2.= "<option value=''></option>";
-                                                    while ($row = mysql_fetch_array($sedes)) {
+                                                    while ($row = mysqli_fetch_array($sedes)) {
                                                         $sbHtML2.="<option value=$row[0]>";
                                                         $sbHtML2.= $row[1];
                                                         $sbHtML2.="</option>";
@@ -553,7 +553,7 @@ $consulta = new sivisae_consultas();
                                                         $perfil = $consulta->perfiles();
                                                         $sbHtML2 = "<select required='required' style='width: 180px;' name='perfil_e' id='perfil_e' data-placeholder='Seleccione un perfil...' style='width: 150px' tabindex='2'>";
                                                         $sbHtML2.= "<option value=''>Seleccione...</option>";
-                                                        while ($row = mysql_fetch_array($perfil)) {
+                                                        while ($row = mysqli_fetch_array($perfil)) {
                                                             $sbHtML2.="<option value=$row[0]>";
                                                             $sbHtML2.= $row[1];
                                                             $sbHtML2.="</option>";
@@ -584,7 +584,7 @@ $consulta = new sivisae_consultas();
                                                         $sbHtML2 = "";
                                                         $sbHtML2 = "<select required='required' style='width: 180px;' name='sede_e' id='sede_e' data-placeholder='Seleccione sede.' style='width: 150px' tabindex='2'>";
                                                         $sbHtML2.= "<option value=''>Seleccione...</option>";
-                                                        while ($row = mysql_fetch_array($sedes)) {
+                                                        while ($row = mysqli_fetch_array($sedes)) {
                                                             $sbHtML2.="<option value=$row[0]>";
                                                             $sbHtML2.= $row[1];
                                                             $sbHtML2.="</option>";
