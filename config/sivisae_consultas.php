@@ -581,7 +581,7 @@ class sivisae_consultas extends Bd {
 
     function opciones($usuarioid, $menuid) {
         $sql = "SELECT 
-                    o.descripcion, o.url, o.opcion_id
+                    o.descripcion, o.url, o.opcion_id, o.tiene_sub
                 FROM 
                     usuario_perfil up 
                     INNER JOIN perfil_opcion po ON po.perfil_perfil_id = up.perfil_perfil_id 
@@ -589,6 +589,18 @@ class sivisae_consultas extends Bd {
                 WHERE 
                     up.usuario_usuario_id = $usuarioid AND o.menu_menu_id = $menuid AND up.estado_estado_id = 1 AND o.estado_estado_id = 1  
                 ORDER BY o.opcion_id ASC ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function subOpciones($opcionid) {
+        $sql = "SELECT
+                    so.descripcion, so.url, so.subopcion_id
+                FROM 
+                    subopcion so 
+                WHERE 
+                    so.opcion_opcion_id = $opcionid AND so.estado_estado_id = 1
+                ORDER BY so.subopcion_id ASC ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }

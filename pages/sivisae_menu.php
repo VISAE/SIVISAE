@@ -72,7 +72,7 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
         $usuarioid = $_SESSION['usuarioid'];
         $menu = $consulta->menu($usuarioid);
         $not = $consulta->getCantNotificaciones($usuarioid);
-        while ($row = mysqli_fetch_array($menu)) {
+        /*while ($row = mysqli_fetch_array($menu)) {
             $menuid = $row[0];
             $descripcion = $row[1];
             $dashboard = $row[2];
@@ -89,6 +89,42 @@ if ($_SESSION['perfilid'] !== '2' && $_SESSION['perfilid'] !== '5' && $_SESSION[
                     echo "<li class='last' ><a href='" . RUTA_PPAL . $url . "&op=" . $id_opcion . "'><span >$opcion</span></a></li>";
                 } else {
                     echo "<li class='last' ><a href='" . RUTA_PPAL . $url . "?op=" . $id_opcion . "'><span >$opcion</span></a></li>";
+                }
+            }
+            echo '</ul></li>';
+        }*/
+        while ($row = mysqli_fetch_array($menu)) {
+            $menuid = $row[0];
+            $descripcion = $row[1];
+            $dashboard = $row[2];
+
+            echo "<li class='has-sub' ><a href='$dashboard'><span>$descripcion</span></a>"
+            . "<ul>";
+            $opciones = $consulta->opciones($usuarioid, $menuid);
+            while ($row1 = mysqli_fetch_array($opciones)) {
+                $opcion = $row1[0];
+                $url = $row1[1];
+                $id_opcion = $row1[2];
+                $tiene_sub = $row1[3];
+
+                if ($id_opcion == 22) {
+                    echo "<li class='last' ><a href='" . RUTA_PPAL . $url . "&op=" . $id_opcion . "'><span >$opcion</span></a></li>";
+                } else {
+                    if($tiene_sub) {    // añadiendo submenús
+                        echo "<li class='has-sub' >
+                                <a href='" . RUTA_PPAL . $url . "?op=" . $id_opcion . "'><span >$opcion</span></a>
+                                <ul> ";
+                        $subopciones = $consulta ->subOpciones($id_opcion);
+                        while ($rowSo = mysqli_fetch_array($subopciones)) {
+                            $opcion = $rowSo[0];
+                            $url = $rowSo[1];
+                            $id_opcion = $rowSo[2];
+                            echo "<li class='last' ><a href='". RUTA_PPAL . $url . "?sop=" . $id_opcion . "'><span>$opcion</span></a></li>";
+                        }
+                        echo "</ul></li>";
+                    } else {
+                        echo "<li class='last' ><a href='" . RUTA_PPAL . $url . "?op=" . $id_opcion . "'><span >$opcion</span></a></li>";
+                    }
                 }
             }
             echo '</ul></li>';

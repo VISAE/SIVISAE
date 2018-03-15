@@ -137,11 +137,13 @@
 }
 #cssmenu ul ul ul {
     top: 37px;
-    padding-left: 5px;
+    /*posicionando submenus*/
+    padding-left: 35px;
 }
 #cssmenu ul ul li {
     position: relative;
 }
+
 #cssmenu > ul > li:hover > ul {
     left: auto;
     top: 44px;
