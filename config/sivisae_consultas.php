@@ -6530,6 +6530,21 @@ class sivisae_consultas extends Bd {
         return $resultado;
     }
 
+    function consultarMatriculado($documento) {  //aqui
+        $sql = "SELECT 
+                e.`cedula`, e.`nombre`, e.`correo`, e.`telefono`, pro.`descripcion` AS programa, pro.`escuela`, c.`descripcion` AS cead, z.`descripcion` AS zona, m.`tipo_estudiante`, m.`numero_matriculas`, pa.`descripcion`
+                FROM matricula m, `programa` pro, `estudiante` e, cead c, zona z, `periodo_academico` pa
+                WHERE pa.`estado_estado_id`=1
+                AND pro.`programa_id`=m.`programa_programa_id`
+                AND e.`estudiante_id`=m.`estudiante_estudiante_id`
+                AND e.`cead_cead_id`=c.`cead_id`
+                AND z.`zona_id`=c.`zona_zona_id`
+                AND pa.`periodo_academico_id`=m.`periodo_academico_periodo_academico_id`
+                AND e.cedula=$documento";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
     //DASH EGRESADOS - FIN
 
     function estructurarDataGrafico($data, $tipoColor) {

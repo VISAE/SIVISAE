@@ -164,7 +164,7 @@ $_SESSION["modulo"] = $_GET["sop"];
                 };
                 $.ajax({
                     data: parametros,
-                    url: 'src/consulta_registroAtencionesCB.php',
+                    url: 'src/consulta_registroMatriculadosCB.php',
                     type: 'POST',
                     beforeSend: function () {
                         $("#carg").introLoader({
@@ -184,9 +184,16 @@ $_SESSION["modulo"] = $_GET["sop"];
                     success: function (response) {
                         var loader = $('#carg').data('introLoader');
                         loader.stop();
-                        $("#result").show();
-                        $("#result").html(response);
-                        $("#cat_atencion, #centro_at, #programa_at").chosen();
+                        swal({
+                            title: response,
+                            text: '',
+                            type: 'info',
+                            confirmButtonColor: '#004669',
+                            confirmButtonText: 'Aceptar'
+                        });
+                        /*$("#result").show();
+                        $("#result").html(response);*/
+                        // $("#cat_atencion, #centro_at, #programa_at").chosen();
                         document.getElementById("cedula").readOnly = true;
                     }
                 });
