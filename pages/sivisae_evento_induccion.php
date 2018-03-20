@@ -107,8 +107,20 @@ $_SESSION["modulo"] = $_GET["sop"];
 
 
             <!--scripts de funcionalidad - inicio-->
-            <script>
+    <script>
         $(document).ready(function () {
+            $(document).on('contextmenu', function (e) {
+                swal({
+                    title: '¡Cuidado!',
+                    text: 'El clic derecho esta deshabilitado en esta página',
+                    type: 'error',
+                    confirmButtonColor: '#004669',
+                    confirmButtonText: 'Aceptar'
+                });
+                return false;
+            });
+
+
             $("#cat_atencion, #centro_at, #programa_at").chosen();
 
             $(".chosen-select-deselect").chosen({allow_single_deselect: true});
@@ -130,6 +142,18 @@ $_SESSION["modulo"] = $_GET["sop"];
         ///Seguridad - Fin
 
         ///validaciones - inicio
+
+        (function ($) {
+            $(function () {
+                $('#btn_cargar').bind('click', function (e) {
+                    e.preventDefault();
+
+                    $('#popup_cargar').bPopup();
+                    $("#archivo").replaceWith($("#archivo").val('').clone(true));
+                    $('#lee').empty();
+                });
+            });
+        })(jQuery);
 
         function submitConsultarDocumento() {
             if ($('#cedula').val() !== '') {
@@ -181,6 +205,48 @@ $_SESSION["modulo"] = $_GET["sop"];
             }
         }
 
+        function CerrarPopup(popup) {
+            if (popup == 1) {
+                $('#popup_asignar').bPopup().close();
+            }
+            if (popup == 2) {
+                $('#popup_cargar').bPopup().close();
+                $("#archivo").replaceWith($("#archivo").val('').clone(true));
+                $('#lee').empty();
+                $('.cerrar').hide();
+            }
+            if (popup == 3) {
+                $('#popup_eliminar').bPopup().close();
+            }
+        }
+
+        function cargarMatriculados() {
+            var data = new FormData();
+            data.append('archivo', $('#archivo')[0].files[0]);
+            //hacemos la petición ajax
+            $.ajax({
+                url: 'src/leer_archivo_cargue_matriculados.php',
+                type: 'POST',
+                // Form data
+                //datos del formulario
+                data: data,
+                //necesario para subir archivos via ajax
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#spinner').show();
+                },
+                success: function (response) {
+                    $('#spinner').hide();
+                    $("#result").html(response);
+                    $('.cerrar').show();
+                    CerrarPopup(2);
+                },
+            });
+            return false;
+        }
+
         function startLoad() {
             $("#dynElement").introLoader({
                 animation: {
@@ -211,7 +277,7 @@ $_SESSION["modulo"] = $_GET["sop"];
 
         ///validaciones - fin
 
-            </script>
+    </script>
             <!--scripts de funcionalidad - fin-->
 
         </head>
@@ -243,7 +309,7 @@ $_SESSION["modulo"] = $_GET["sop"];
 
                     <div class="art-postcontent">
                         <div align="center">
-                            <form id="consultar_documento" name="consultar_documento" method="post" onsubmit="return submitConsultarDocumento()" action="src/consulta_registroAtencionesCB.php">
+                            <form id="consultar_documento" name="consultar_documento" method="post" onsubmit="return submitConsultarDocumento()" action="#">
                                 <div style="background-color: #ffffff">
                                     <table style="width: 400px">
                                         <tr>
@@ -252,16 +318,80 @@ $_SESSION["modulo"] = $_GET["sop"];
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <p><input class="submit_fieldset_autenticacion" type="submit" value="Ingresar"/></p>
-                                                <div align="center" id="result"></div>
-                                                <div id="spinner" align="center" style="display:none;">
-                                                    <img id="img-spinner" width="50" height="50" src="template/imagenes/generales/loading.gif" alt="Loading"/>
-                                                </div>
+                                                <p><input class="submit_fieldset_autenticacion" type="submit" value="Ingresar"/></p>                                                
                                             </td>
                                         </tr>
                                     </table>
+                                    <?php
+                                    if ((($copy == $edit) == $delete) == 1) {
+                                    ?>
+                                    <div align="right">
+                                        <button title="Cargar base" id="btn_cargar" class="boton_ex"></button>
+                                        <br>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
-                            </form>                  
+                            </form>
+                            <div id="popup_cargar">
+                                <span class="button_cerrar b-close"></span><br>
+                                <div align="center" style="background-color: #004669">
+                                    <h2 id='p_fieldset_autenticacion_2'>
+                                        Cargar Archivo de Matriculados
+                                    </h2>
+                                </div>
+                                <div class="art-postcontent">
+
+                                    <div align="center">
+                                        <div style="background-color: #E8E8E8">
+                                        </div>
+                                        <form id="cargar_asignacion" name="cargar_asignacion">
+                                            <table>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        Para realizar cargue mediante archivo plano descargue el modelo
+                                                        <a href="<?php echo RUTA_PPAL . "modelos/modelo_cargue_matriculados.csv" ?>">Aquí</a><br>
+                                                        ó seleccione el archivo *.csv, *.xls ó *.xlsx en su
+                                                        equipo<br><br>
+                                                        <br>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <br>
+                                                        <label for="archivo">Archivo:</label>
+                                                        <input type="file" name="archivo" id="archivo"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" align="center">
+                                                        <br/>
+                                                        <p><input class="submit_fieldset_autenticacion" type="submit" onclick="return cargarMatriculados()" value="Cargar"/></p>
+                                                    </td>
+                                                </tr>
+                                                <div id="spinner" align="center" style="display:none;">
+                                                    <img id="img-spinner" width="50" height="50"
+                                                         src="template/imagenes/generales/loading.gif" alt="Loading"/>
+                                                </div>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <div id="lee">
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" align="center" class="cerrar" style="display: none">
+                                                        <br/>
+                                                        <p><input class="submit_fieldset_autenticacion"
+                                                                  id="cerrar_p_cargar" type="button"
+                                                                  onclick="CerrarPopup(2)" value="Cerrar"/></p></td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="dynElement"></div>
