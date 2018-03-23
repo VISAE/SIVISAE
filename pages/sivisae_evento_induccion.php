@@ -193,15 +193,16 @@ $_SESSION["modulo"] = $_GET["sop"];
                     success: function (response) {
                         var loader = $('#carg').data('introLoader');
                         loader.stop();
+                        response = JSON.parse(response);
                         swal({
-                            title: response,
+                            title: response.titleSwal,
                             text: '',
-                            type: 'info',
+                            type: response.typeSwal,
                             confirmButtonColor: '#004669',
                             confirmButtonText: 'Aceptar'
                         });
-                        /*$("#result").show();
-                        $("#result").html(response);*/
+                        $("#result").show();
+                        $("#result").html(response.response);
                         // $("#cat_atencion, #centro_at, #programa_at").chosen();
                         document.getElementById("cedula").readOnly = true;
                     }
