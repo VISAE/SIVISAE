@@ -4,8 +4,9 @@ session_start();
 include_once './excel/PHPExcel.php';
 include_once '../config/sivisae_class.php';
 //include_once './crear_reporteCB.php';
+//set_time_limit(300);
 if (!isset($_FILES['archivo'])) {
-    echo 'Ha habido un error, tienes que elegir un archivo';
+    echo 'Ha habido un error, tiene que elegir un archivo';
 } else {
     $nombre = $_FILES['archivo']['name'];
     $nombre_tmp = $_FILES['archivo']['tmp_name'];
@@ -32,102 +33,52 @@ if (!isset($_FILES['archivo'])) {
             $phpExcel = PHPExcel_IOFactory::load("../tmp/" . $nombre);
             $hoja = $phpExcel->getActiveSheet()->toArray(true, true, true);
 
-
             foreach ($hoja as $indice => $fila) {
-                $aux = "";
-                $cont = 0;
-                /*foreach ($fila as $celda) {
-                    if ($celda != "") {
-                        $cont++;
-                        if ($cont == 1) {
-                            $aux .= $celda;
+                if($indice == 5) { // captura periodo
+                    $periodo = $consulta->consultaPeriodo($fila[0]);
+                    if ($row = mysqli_fetch_array($periodo))
+                        $periodo = $row[0];
+                }
+                if($indice == 6) //captura encabezados
+                    $encabezados = $fila;
+                if($indice > 6) { // Inicio informacion estudiantes
+                    $estudiante = array_combine($encabezados, $fila);
+                    $centro = preg_replace("/\(.*?\)/", "", $estudiante["Centro"]);
+                    $idCentro = $consulta->consultaCentro($centro);
+                    $idCentro = mysqli_fetch_array($idCentro)[0];
+                    $idPrograma = $consulta->consultaPrograma($estudiante["Programa"]);
+                    $idPrograma = mysqli_fetch_array($idPrograma)[0];
+                    $estrato = $consulta->consultaEstrato($estudiante["Estrato"]);
+                    $estrato = mysqli_fetch_array($estrato)[0];
+                    $etnia = $consulta->consultaEtnia($estudiante["Etnia"]);
+                    $etnia = mysqli_fetch_array($etnia)[0];
+                    $discapacidad = $consulta->consultaDiscapacidad($estudiante["Discapacidad"]);
+                    $discapacidad = mysqli_fetch_array($discapacidad)[0];
+                    $tipo = ($estudiante["Tipo"] == "NUEVO")?"H":"G";
+                    $genero = ($estudiante["Genero"] == "MASCULINO")?"M":"F";
+                    $usuario = explode("@", $estudiante["Email Institucional"])[0];
+
+                    $datosEstudiante = $consulta->consultaEstudiante($estudiante["Código"]);
+                    if ($row = mysqli_fetch_array($datosEstudiante)) { // si encuentra datos del estudiante
+                        /*    $datosMatricula = $consulta->consultaMatricula($row[0], $periodo, $idPrograma);
+                            if(!($row_1 = mysqli_fetch_array($datosMatricula))) { // si no existen datos de matrícula
+                                //$idMatricula = $consulta->agregaMatricula($row[0], $periodo, $idPrograma, $tipo, 1);
+                            }
+                            $estudiantes[] = "Antiguo: ". $row[0] ." matricula: ".$row_1[0];
+                            $estudiantes[] = "Antiguo: ". $row[0] ." matricula: ".$idMatricula;
                         } else {
-                            $aux .= ";" . $celda;
-                        }
+                            $idEstudiante = $consulta->agregaEstudiante($estudiante, $idCentro, $genero, $usuario, $estrato, $etnia, $discapacidad);
+                            $idMatricula = $consulta->agregaMatricula($row[0], $periodo, $idPrograma, $tipo, 1);
+
+                            $estudiantes[] = "Nuevo: ". $row[0] ." matricula: ".$idMatricula;
+                            $estudiantes[] = $row[0];*/
                     }
+                    $estudiantes[] = $idCentro.' '.$idPrograma.' '.$estrato.' '.$etnia.' '.$discapacidad.' '.$tipo.' '.$genero.' '.$usuario;
                 }
-                $estudiantes[] = $aux;*/
-                $estudiantes[] = $fila;
             }
 
+//            echo array_search('Discapacidad',$estudiantes[0]);
             echo json_encode($estudiantes);
-
-            /*$result = $consulta->cargarAsignarEstudiantesConsejeria(array_slice($estudiantes, 1), $_SESSION['usuarioid']);
-            echo "
-     
-<table><tr>";
-            if ($result[0] !== '1') {
-                $asig = array();
-                while ($fila = mysql_fetch_array($result[0])) {
-                    $asig[] = $fila;
-                }
-                $titulo = "Reporte de estudiantes ya asignados";
-                $columnas = array("Cedula Estudiante", "Nombre Estudiante", "Cedula Consejero", "Nombre Consejero");
-                $nombre_arch = "Estudiantes ya asignados";
-                $desc = "Reporte que contiene un listado de estudiantes que ya habían sido asignados";
-                $ruta = generarReporte($titulo, $columnas, $asig, $nombre_arch, $desc);
-
-                echo "<td >Algunos estudiantes ya estaban asignados: &nbsp&nbsp";
-                echo mysql_num_rows($result[0]) . "<br>";
-                echo "<br>Descargue el reporte <a href='" . RUTA_PPAL . "$ruta'>Aquí</a>";
-                echo "<br><div id='asignados' class='tg' style='display:none'><table>"
-                . "<colgroup>
-                        <col style='width: 300px'>
-                        <col style='width: 300px'>
-                    </colgroup>
-                        <tr>
-                            <th class='tg-r31a'>Estudiante</th>
-                            <th class='tg-r31a' >Consejero</th>
-                        </tr>";
-//                while ($row = mysql_fetch_array($result[0])) {
-                foreach ($asig as $row) {
-                    echo "<tr><td class='tg-7ser'>$row[0]"
-                    . "<br>" . ucwords($row[1]) . "</td>"
-                    . "<td class='tg-7ser'>$row[2]"
-                    . "<br>" . ucwords($row[3]) . "</td>"
-                    . "</tr>";
-                }
-                echo "</table></div></td>";
-            }
-
-            if ($result[1] !== '0') {
-                $asignar = array();
-                while ($fila = mysql_fetch_array($result[1])) {
-                    $asignar[] = $fila;
-                }
-                $titulo = "Reporte de estudiantes asignados";
-                $columnas = array("Cedula Estudiante", "Nombre Estudiante", "Cedula Consejero", "Nombre Consejero");
-                $nombre_arch = "Estudiantes recien Asignados";
-                $desc = "Reporte que contiene un listado de estudiantes que han sido asignados en este cargue";
-                $ruta = generarReporte($titulo, $columnas, $asignar, $nombre_arch, $desc);
-
-
-                echo "<td >Estudiantes asignados en este cargue: &nbsp&nbsp";
-                echo mysql_num_rows($result[1]);
-                echo "<br>Descargue el reporte <a href='" . RUTA_PPAL . "$ruta'>Aquí</a>";
-                echo "<br><div id='recien' class='tg' style='display:none'><table>"
-                . "<colgroup>
-                        <col style='width: 300px'>
-                        <col style='width: 300px'>
-                    </colgroup>
-                        <tr>
-                            <th class='tg-r31a'>Estudiante</th>
-                            <th class='tg-r31a' >Consejero</th>
-                        </tr>";
-//                while ($row = mysql_fetch_array($result[0])) {
-                foreach ($asignar as $row) {
-                    echo "<tr><td class='tg-7ser'>$row[0]"
-                    . "<br>" . ucwords($row[1]) . "</td>"
-                    . "<td class='tg-7ser'>$row[2]"
-                    . "<br>" . ucwords($row[3]) . "</td>"
-                    . "</tr>";
-                }
-                echo "</table></div></td>";
-            } else {
-                echo "<td>No se asignaron los estudiantes, por vafor compruebe que <br>si pertenezcan a el periodo escrito en el archivo</td>";
-            }
-        }
-        echo "</tr></table>";*/
         }
     } else {
         echo 'Archivo inválido ';

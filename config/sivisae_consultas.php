@@ -6530,9 +6530,10 @@ class sivisae_consultas extends Bd {
         return $resultado;
     }
 
-    function consultarMatriculado($documento) {  //aqui
+    function consultarMatriculado($documento, $periodo) {  //aqui
         $sql = "SELECT 
-                e.`cedula`, e.`nombre`, e.`correo`, e.`telefono`, pro.`descripcion` AS programa, pro.`escuela`, c.`descripcion` AS cead, z.`descripcion` AS zona, m.`tipo_estudiante`, m.`numero_matriculas`, pa.`descripcion`
+                e.`cedula`, e.`nombre`, e.`correo`, e.`telefono`, pro.`descripcion` AS programa, pro.`escuela`, 
+                c.`descripcion` AS cead, z.`descripcion` AS zona, m.`tipo_estudiante`, m.`numero_matriculas`, pa.`descripcion`
                 FROM matricula m, `programa` pro, `estudiante` e, cead c, zona z, `periodo_academico` pa
                 WHERE pa.`estado_estado_id`=1
                 AND pro.`programa_id`=m.`programa_programa_id`
@@ -6540,11 +6541,112 @@ class sivisae_consultas extends Bd {
                 AND e.`cead_cead_id`=c.`cead_id`
                 AND z.`zona_id`=c.`zona_zona_id`
                 AND pa.`periodo_academico_id`=m.`periodo_academico_periodo_academico_id`
-                AND e.cedula=$documento";
+                AND e.cedula=$documento
+                AND m.`periodo_academico_periodo_academico_id`=$periodo ";
         $resultado = mysqli_query($this->getConexion(), $sql);
         return $resultado;
     }
 
+    function consultaEstudiante($documento) {
+        $sql = "SELECT 
+                `estudiante_id`
+                FROM `SIVISAE`.`estudiante` e
+                WHERE e.cedula='$documento'";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaCentro($centro) {
+        $sql = "SELECT 
+                c.`cead_id`, c.`descripcion`, c.`zona_zona_id` 
+                FROM `sivisae`.`cead` c 
+                WHERE c.`estado_estado_id` = 1
+                AND c.`descripcion` LIKE '%$centro%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaPrograma($programa) {
+        $sql = "SELECT 
+                p.`programa_id`, p.`descripcion`  
+                FROM `sivisae`.`programa` p 
+                WHERE p.`estado_estado_id` = 1
+                AND p.`descripcion` LIKE '%$programa%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaPeriodo($periodo) {
+        $sql = "SELECT
+                p.`periodo_academico_id`
+                FROM `sivisae`.`periodo_academico` p
+                WHERE p.`estado_estado_id` = 1
+                AND p.`descripcion` LIKE '%$periodo%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaMatricula($estudiante, $periodo, $programa) {
+        $sql = "SELECT
+                m.`matricula_id`
+                FROM `sivisae`.`matricula` m
+                WHERE m.`estudiante_estudiante_id` = $estudiante
+                AND m.`periodo_academico_periodo_academico_id` = $periodo
+                AND m.`programa_programa_id` = $programa ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaEstrato($estrato) {
+        $sql = "SELECT
+                e.`estrato_id`
+                FROM `sivisae`.`estrato` e
+                WHERE e.`descripcion` LIKE '%$estrato%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaEtnia($etnia) {
+        $sql = "SELECT
+                e.`etnia_id`
+                FROM `sivisae`.`etnia` e
+                WHERE e.`descripcion` LIKE '%$etnia%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function consultaDiscapacidad($discapacidad) {
+        $sql = "SELECT
+                e.`discapacidad_id`
+                FROM `sivisae`.`Discapacidad` e
+                WHERE e.`descripcion` LIKE '%$discapacidad%' ";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        return $resultado;
+    }
+
+    function agregaMatricula($estudiante, $periodo, $programa, $tipo, $matriculas) {
+        $sql = "INSERT INTO `sivisae`.`matricula` 
+                (`estudiante_estudiante_id`, `periodo_academico_periodo_academico_id`, `programa_programa_id`, `tipo_estudiante`, `numero_matriculas`)
+                VALUES
+                ('$estudiante', '$periodo', '$programa', '$tipo', '$matriculas')";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        $matriculaId = mysqli_insert_id($this->getConexion());
+        return $matriculaId;
+    }
+
+    function agregaEstudiante($estudiante, $idCentro, $genero, $usuario, $estrato, $etnia, $discapacidad) {
+        $sql = "INSERT INTO `sivisae`.`matricula`
+                (`cedula`, `nombre`, `correo`, `cead_cead_id`, `skype`, `fecha_nacimiento`, `genero`, `estado_civil`, 
+                `telefono`, `usuario`, `estrato_estrato_id`, `etnia_etnia_id`, `discapacidad_discapacidad_id`)
+                VALUES 
+                ('".$estudiante['Código']."','".$estudiante['Nombres']."', '".$estudiante['Apellidos']."', '".$estudiante['Email Personal']."',
+                 '$idCentro', 'skype', '".date('Y-m-d')."', '$genero', 'Soltero(a)', '".$estudiante['Telefono']."' ,
+                  '$usuario', '$estrato', '$etnia', '$discapacidad')";
+        $resultado = mysqli_query($this->getConexion(), $sql);
+        $estudianteId = mysqli_insert_id($this->getConexion());
+        return $estudianteId;
+    }
+    
     //DASH EGRESADOS - FIN
 
     function estructurarDataGrafico($data, $tipoColor) {

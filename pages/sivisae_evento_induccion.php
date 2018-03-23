@@ -74,6 +74,14 @@ $_SESSION["modulo"] = $_GET["sop"];
             include "../template/sivisae_link_home.php";
             $respuesta = $consulta->perfiles();
             $sedes = $consulta->traerSedes();
+            // consultar periodos
+            $pf = $_SESSION['perfilid'];
+
+            if (isset($pf) && $pf !== '1' && $pf !== '3' && $pf !== '4' && $pf !== '6' && $pf !== '7') {
+                $periodos = $consulta->periodos();
+            } else {
+                $periodos = $consulta->periodos_administrador();
+            }
             ?>
 
             <!--contenedor-->
@@ -156,11 +164,12 @@ $_SESSION["modulo"] = $_GET["sop"];
         })(jQuery);
 
         function submitConsultarDocumento() {
-            if ($('#cedula').val() !== '') {
+            var camposLlenos = {'Periodo':$('#periodo').val(), 'Cédula':$('#cedula').val()};
+            if (camposLlenos.Periodo !== '' && camposLlenos.Cédula !== '') {
 
-                var cedula = $('#cedula').val();
                 var parametros = {
-                    "documento": cedula
+                    "documento": camposLlenos.Cédula,
+                    "periodo": camposLlenos.Periodo
                 };
                 $.ajax({
                     data: parametros,
@@ -200,14 +209,19 @@ $_SESSION["modulo"] = $_GET["sop"];
                 return false;
 
             } else {
+                var str = '';
+                for(key in camposLlenos) {
+                    if(camposLlenos[key] == '')
+                        str += (str == '')?key:' y '+key;
+                }
                 swal({
-                    title: '¡Debe ingresar el número de documento!',
+                    title: '¡Debe ingresar '+str+'!',
                     text: '',
                     type: 'error',
                     confirmButtonColor: '#004669',
                     confirmButtonText: 'Aceptar'
                 });
-                $('#cedula').focus();
+                $('#periodo').focus();
                 return false;
             }
         }
@@ -317,14 +331,33 @@ $_SESSION["modulo"] = $_GET["sop"];
                     <div class="art-postcontent">
                         <div align="center">
                             <form id="consultar_documento" name="consultar_documento" method="post" onsubmit="return submitConsultarDocumento()" action="#">
-                                <div style="background-color: #ffffff">
+                                <div style="background-color: #ffffff;">
                                     <table style="width: 400px">
                                         <tr>
-                                            <td><label for="cedula">Cédula (Aspirante, Estudiante o Graduado/Egresado) (*):</label></td>
-                                            <td><input style="width: 180px;" id="cedula" name="cedula" type="text" maxlength="15"/></td>
+                                            <td  style="padding: 20px">
+                                                <?php
+                                                if ($modulo != 12) {
+                                                    ?>
+                                                    * Periodo:
+                                                    <select id="periodo" name="periodo" data-placeholder="Seleccione un periodo" class="chosen-select-deselect" style="width:180px;" tabindex="2">
+                                                        <option value=""></option>
+                                                        <?php
+                                                        while ($row = mysqli_fetch_array($periodos)) {
+                                                            echo "<option value='$row[0]'>" .
+                                                                utf8_encode(ucwords($row[1])) .
+                                                                "</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                <?php } ?>
+                                            </td>
+                                            <td width="30px"></td>
+                                            <td>
+                                                <label for="cedula">* Cédula del Matriculado:</label>
+                                                <input style="width: 180px;" id="cedula" name="cedula" type="text" maxlength="15" tabindex="1"/></td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 <p><input class="submit_fieldset_autenticacion" type="submit" value="Ingresar"/></p>                                                
                                             </td>
                                         </tr>
@@ -400,9 +433,9 @@ $_SESSION["modulo"] = $_GET["sop"];
                                 </div>
                             </div>
                         </div>
+                        <div id="carg" align="center"></div>
                     </div>
                     <div id="dynElement"></div>
-                    <div id="carg" align="center"></div>
                     <div align="center" id="result"></div>
                 </div>
 

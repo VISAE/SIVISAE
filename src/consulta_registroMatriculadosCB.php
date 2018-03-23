@@ -9,12 +9,14 @@ session_start();
 include_once '../config/sivisae_class.php';
 $consulta = new sivisae_consultas();
 
-if (isset($_POST['documento'])) {
+if (isset($_POST['documento']) && isset($_POST['periodo'])) {
     $documento = $_POST['documento'];
-    $datosEstudiante = $consulta->consultarMatriculado($documento);
+    $periodo = $_POST['periodo'];
     $salida = 'Registro Inexistente proceda a crearlo';
-    while ($row = mysqli_fetch_array($datosEstudiante)) {
-        $salida = 'Bienvenido(a):';
+    $datosEstudiante = $consulta->consultarMatriculado($documento, $periodo);
+    if ($row = mysqli_fetch_array($datosEstudiante)) {
+
+        $salida = 'Bienvenido(a): '.$row[1];
     }
     echo $salida;
 } else {
